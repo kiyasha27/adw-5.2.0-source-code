@@ -1,0 +1,7 @@
+<div *ngFor="let securityMark of marksData | async | slice:0:3;">
+    <div id="display-box">{{ securityMark }}</div>
+</div>
+<div id="show-all" *ngIf="securityMarksList?.length > 3">
+    <div tabindex=0 (keyup.enter)="showAll()" (click)="showAll()" id="content">{{'GOVERNANCE.SECURITY_MARKS.SHOW_ALL' | translate}}</div>
+</div>
+

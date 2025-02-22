@@ -1,0 +1,74 @@
+<aca-page-layout>
+    <div class="aca-page-layout-header">
+        <h1 class="adw-page-title">{{ 'LIBRARY_LIST.ALL_LIBRARIES.TITLE' | translate }}</h1>
+        <aca-toolbar [items]="actions" />
+    </div>
+
+    <div class="aca-page-layout-content">
+        <div class="aca-main-content">
+            <adw-data-table-extension
+                (name-click)="navigateTo($any($event).detail?.node)"
+                (row-dblclick)="navigateTo($any($event).detail?.value?.obj)"
+                [items]="$any(sites)"
+                [loading]="isLoading"
+                acaContextActions
+                adwDataTable
+                [multiselect]="true">
+                <data-columns>
+                    <data-column key="$thumbnail" type="image" />
+
+                    <data-column
+                        class="adf-expand-cell-3"
+                        key="title"
+                        title="{{ 'LIBRARY_LIST.COLUMNS.NAME' | translate }}"
+                        type="text"
+                        [draggable]="true">
+                        <ng-template let-context>
+                            <adf-library-name-column [context]="context" />
+                        </ng-template>
+                    </data-column>
+
+                    <data-column
+                        class="adf-expand-cell-5 adf-ellipsis-cell"
+                        key="description"
+                        title="{{'LIBRARY_LIST.COLUMNS.DESCRIPTION' | translate }}"
+                        type="text"
+                        [draggable]="true" />
+
+                    <data-column
+                        class="adw-role-cell"
+                        key="role"
+                        title="{{ 'LIBRARY_LIST.COLUMNS.MY_ROLE' | translate }}"
+                        type="text"
+                        [draggable]="true">
+                        <ng-template let-context>
+                            <adf-library-role-column [context]="context" />
+                        </ng-template>
+                    </data-column>
+
+                    <data-column
+                        key="visibility"
+                        title="{{'LIBRARY_LIST.COLUMNS.VISIBILITY' | translate }}"
+                        type="text"
+                        [draggable]="true" />
+                </data-columns>
+
+                <adf-custom-empty-content-template>
+                    <adf-empty-content
+                        icon="library_books"
+                        subtitle="{{ 'LIBRARY_LIST.EMPTY_TEMPLATE.SUBTITLE' | translate }}"
+                        title="{{ 'LIBRARY_LIST.EMPTY_TEMPLATE.TITLE' | translate }}" />
+                </adf-custom-empty-content-template>
+
+            </adw-data-table-extension>
+
+            <adf-pagination (change)="updatePagination($any($event))"
+                            [pagination]="sites?.list?.pagination"
+                            acaPagination />
+        </div>
+
+        <div *ngIf="infoDrawerOpened$ | async" class="adw-sidebar">
+            <aca-info-drawer [node]="$any(selection.library)" />
+        </div>
+    </div>
+</aca-page-layout>

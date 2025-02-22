@@ -1,0 +1,145 @@
+.adf-content-area {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.adf-content-border {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    min-height: 0;
+    vertical-align: unset;
+    text-align: unset;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+aca-page-layout-header {
+    justify-content: space-between;
+
+    .adf-breadcrumb-item {
+        margin-top: inherit;
+    }
+}
+
+.aps-take-details-toolbar-actions {
+    display: flex;
+    align-items: center;
+
+    & > button {
+        text-align: center;
+        margin-left: 10px;
+
+        &:hover {
+            color: var(--theme-primary-color);
+        }
+    }
+}
+
+.aps-task-form-container {
+    min-height: 0;
+    height: 98%;
+    background-color: var(--theme-card-background-color);
+}
+
+.aps-task-form-container > .adf-task-form-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 98%;
+    overflow: hidden auto;
+    min-height: 0;
+}
+
+.aps-task-form-container .adf-form-card-content {
+    display: flex;
+    overflow: hidden auto;
+    flex-direction: column;
+    flex: 1;
+    height: 98%;
+    min-height: 0;
+}
+
+adf-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 98%;
+    overflow: hidden auto;
+    min-height: 0;
+}
+
+adf-form .adf-form-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 98%;
+    overflow: hidden auto;
+    min-height: 0;
+}
+
+.aps-task-form-container .adf-form-container-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 98%;
+    overflow: hidden auto;
+    min-height: 0;
+}
+
+.aps-task-form-container .adf-form-container .adf-form-card-content {
+    display: flex;
+    overflow: hidden auto;
+    flex-direction: column;
+    flex: 1;
+    height: 98%;
+    min-height: 0;
+}
+
+.adf-form-mat-card-actions {
+    text-align: right;
+}
+
+.aps-task-form-container adf-task-standalone .adf-form-mat-card-actions #adf-no-form-attach-form-button span {
+    display: none;
+}
+
+.adf-toolbar-title {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+
+    adf-icon {
+        display: flex;
+    }
+
+    .adf-active {
+        color: var(--theme-primary-color);
+    }
+}
+
+.adf-form-title {
+    display: none;
+}
+
+aps-task-details-ext {
+    .aps-task-details-layout {
+        .aps-task-details-page-content {
+            flex-direction: column;
+            display: flex;
+
+            .aps-task-form-container {
+                flex-direction: column;
+                display: flex;
+                place-content: stretch space-between;
+                align-items: stretch;
+                max-width: 100%;
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../out-tsc/content-ee",
+        "types": [
+            "jasmine",
+            "node"
+        ]
+    },
+    "files": [
+        "./src/polyfills.ts",
+        "./src/main.ts"
+    ],
+    "include": [
+        "./src/app",
+        "./src/environments/*"
+    ],
+    "exclude": []
+}

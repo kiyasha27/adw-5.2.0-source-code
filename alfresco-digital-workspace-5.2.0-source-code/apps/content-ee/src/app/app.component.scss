@@ -1,0 +1,31 @@
+app-root {
+    display: flex;
+    flex: 1;
+
+    .app-sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+    .adf-viewer-render-layout-content>div {
+        display: flow;
+        /* flex-flow: row wrap; */
+        /* margin: 0 auto; */
+        /* align-items: stretch; */
+        height: 93vh;
+       
+    }
+    
+    .adf-viewer-render-layout-content {
+        overflow: hidden;
+        z-index: 1;
+        background-color: #fff8eb;
+        flex-flow: row wrap;
+        flex: 1;
+    }
+}

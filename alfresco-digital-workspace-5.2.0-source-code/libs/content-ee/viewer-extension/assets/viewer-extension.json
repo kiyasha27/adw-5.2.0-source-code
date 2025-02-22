@@ -1,0 +1,36 @@
+{
+    "$version": "1.0.0",
+    "$id": "custom.viewer.plugin",
+    "$name": "Custom PDF Viewer Extension",
+    "$description": "Replaces default PDF viewer with custom implementation",
+    "$license": "MIT",
+    "features": {
+        "viewer": {
+            "components": [
+                {
+                    "id": "app.viewer.pdf",
+                    "fileExtension": "pdf",
+                    "component": "app.viewer.pdf"
+                }
+            ],
+            "alfresco-enterprise-viewer": {
+                "$version": "1.0.0",
+                "enabled": true,
+                "properties": {
+                    "endpoints": {
+                        "aev": "/OpenAnnotate",
+                        "aevVideo": "/OpenAnnotateVideo"
+                    },
+                    "supportedMimetypes": {
+                        "videos": [
+                            "video/mp4"
+                        ]
+                    },
+                    "aevVideoSeperate": false,
+                    "alfrescoDocumentStorePrefix": "workspace://SpacesStore/",
+                    "extraAEVUrlParams": {}
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,683 @@
+{
+    "$version": "1.1.0",
+    "$id": "governance.plugin",
+    "$name": "governance",
+    "$vendor": "Hyland Software, Inc. and its affiliates",
+    "$license": "LGPL-3.0",
+    "$runtime": "1.8.0",
+    "$description": "Enable the governance options by overriding the existing ACA functions",
+
+    "rules": [
+        {
+            "id": "app.context.canShareRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "canToggleSharedLink" },
+                { "type": "rule", "value": "!app.selection.isRecord" }
+            ]
+        },
+        {
+            "id": "app.context.canDeleteNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "app.selection.canDelete" },
+                { "type": "rule", "value": "!app.selection.isRecord" }
+            ]
+        },
+        {
+            "id": "app.context.canCopyNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "canCopyNode" },
+                { "type": "rule", "value": "!app.selection.isRecord" }
+            ]
+        },
+        {
+            "id": "app.context.canViewVersionNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "canManageFileVersions" },
+                { "type": "rule", "value": "app.record.canUpdateVersion" }
+            ]
+        },
+        {
+            "id": "app.context.canViewPermissionNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "canManagePermissions" },
+                { "type": "rule", "value": "!app.selection.isRecord" }
+            ]
+        },
+        {
+            "id": "app.context.canToggleLockNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "canToggleEditOffline" },
+                { "type": "rule", "value": "app.record.canUpdateVersion" },
+                { "type": "rule", "value": "app.record.canToggleEditOfflineRecord" }
+            ]
+        },
+        {
+            "id": "app.context.canUploadNodeVersionNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "app.selection.file.canUploadVersion" },
+                { "type": "rule", "value": "app.record.canUpdateVersion" }
+            ]
+        },
+        {
+            "id": "app.sidebar.canUpdateVersionNonRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "app.navigation.isNotLibraries" },
+                { "type": "rule", "value": "app.record.canUpdateVersion" }
+            ]
+        },
+        {
+            "id": "app.record.canUpdateRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "app.selection.file" },
+                { "type": "rule", "value": "app.selection.canUpdateRecord" }
+            ]
+        },
+        {
+            "id": "app.record.canStoreRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "isLibraryAction" },
+                { "type": "rule", "value": "app.glacier.canStoreRecord" }
+            ]
+        },
+        {
+            "id": "app.record.canRestoreRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "isLibraryAction" },
+                { "type": "rule", "value": "app.glacier.canRestoreRecord" }
+            ]
+        },
+        {
+            "id": "app.record.canExtendRestoreRecord",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "isLibraryAction" },
+                { "type": "rule", "value": "app.selection.file" },
+                { "type": "rule", "value": "app.glacier.canExtendRestoreRecord" }
+            ]
+        },
+        {
+            "id": "app.glacier.canDownload",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "app.selection.canDownload" },
+                { "type": "rule", "value": "!app.glacier.isStored" }
+            ]
+        },
+        {
+            "id": "app.glacier.canView",
+            "type": "core.every",
+            "parameters": [
+                { "type": "rule", "value": "canViewFile" },
+                { "type": "rule", "value": "!app.glacier.isStored" }
+            ]
+        },
+        {
+            "id": "app.record.canDeleteFiles",
+            "type": "core.every",
+            "parameters": [
+                {
+                    "type": "rule",
+                    "value": "app.selection.file"
+                },
+                {
+                    "type": "rule",
+                    "value": "app.record.canDeleteStoredRecord"
+                }
+            ]
+        }
+    ],
+
+    "actions": [
+        {
+            "id": "manage-security-mark.actions.execute",
+            "type": "MANAGE_SECURITY_MARK",
+            "payload": "$(context.selection.first.entry)"
+        },
+        {
+            "id": "declare-record.actions.execute",
+            "type": "DECLARE_RECORD_ACTION",
+            "payload": "$(context.selection.nodes)"
+        },
+        {
+            "id": "delete-record.actions.execute",
+            "type": "DELETE_RECORD",
+            "payload": "$(context.selection.first.entry)"
+        },
+        {
+            "id": "move-record.actions.execute",
+            "type": "MOVE_RECORD",
+            "payload": "$(context.selection.first.entry)"
+        },
+        {
+            "id": "manage-holds.actions.execute",
+            "type": "MANAGE_HOLDS",
+            "payload": "$(context.selection.first.entry)"
+        },
+        {
+            "id": "bulk-holds-warning.actions.execute",
+            "type": "BULK_HOLDS_WARNING"
+        }
+    ],
+
+    "features": {
+        "toolbar": [
+            {
+                "id": "app.toolbar.share",
+                "rules": {
+                    "visible": "app.record.canShareRecord"
+                }
+            },
+            {
+                "id": "app.toolbar.preview",
+                "rules": {
+                    "visible": "app.glacier.canView"
+                }
+            },
+            {
+                "id": "app.toolbar.download",
+                "rules": {
+                    "visible": "app.glacier.canDownload"
+                }
+            },
+            {
+                "id": "app.toolbar.more",
+                "type": "menu",
+                "order": 10000,
+                "icon": "more_vert",
+                "title": "APP.ACTIONS.MORE",
+                "children": [
+                    {
+                        "id": "app.toolbar.toggleLock",
+                        "order": 110,
+                        "rules": {
+                            "visible": ["app.context.canToggleLockNonRecord"]
+                        }
+                    },
+                    {
+                        "id": "content-services.components.edit-word",
+                        "rules": {
+                            "visible": ["app.context.canOpenRecordWithOffice"]
+                        }
+                    },
+                    {
+                        "id": "content-services.components.edit-powerpoint",
+                        "rules": {
+                            "visible": ["app.context.canOpenRecordWithOffice"]
+                        }
+                    },
+                    {
+                        "id": "content-services.components.edit-excel",
+                        "rules": {
+                            "visible": ["app.context.canOpenRecordWithOffice"]
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.uploadNodeVersion",
+                        "order": 200,
+                        "rules": {
+                            "visible": ["app.context.canUploadNodeVersionNonRecord"]
+                        }
+                    },
+                    {
+                        "id": "declare-record.actions",
+                        "order": 415,
+                        "title": "GOVERNANCE.DECLARE-RECORD.TITLE",
+                        "icon": "inventory_2",
+                        "actions": {
+                            "click": "declare-record.actions.execute"
+                        },
+                        "rules": {
+                            "visible": "app.selection.canDeclareAsRecord"
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.record.move",
+                        "order": 551,
+                        "title": "GOVERNANCE.MOVE-RECORD.TITLE",
+                        "icon": "drive_file_move",
+                        "rules": {
+                            "visible": "app.record.canUpdateRecord"
+                        },
+                        "actions": {
+                            "click": "move-record.actions.execute"
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.copy",
+                        "order": 600,
+                        "rules": {
+                            "visible": "app.context.canCopyNonRecord"
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.move",
+                        "order": 500,
+                        "rules": {
+                            "visible": "app.context.canDeleteNonRecord"
+                        }
+                    },
+                    {
+                        "id": "app.context.record.menu.delete",
+                        "title": "GOVERNANCE.DELETE-RECORD.TITLE",
+                        "order": 550,
+                        "icon": "delete_sweep",
+                        "actions": {
+                            "click": "delete-record.actions.execute"
+                        },
+                        "rules": {
+                            "visible": "app.record.canDeleteFiles"
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.delete",
+                        "order": 800,
+                        "rules": {
+                            "visible": "app.record.canDeleteStoredNode"
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.versions",
+                        "order": 1100,
+                        "rules": {
+                            "visible": "app.context.canViewVersionNonRecord"
+                        }
+                    },
+                    {
+                        "id": "app.toolbar.permissions",
+                        "order": 1200,
+                        "rules": {
+                            "visible": "app.context.canViewPermissionNonRecord"
+                        }
+                    }
+                ]
+            }
+        ],
+        "bulk-actions": [
+            {
+                "id": "app.bulk.actions.legalHold",
+                "title": "GOVERNANCE.MANAGE_HOLDS.DIALOG_TITLE",
+                "tooltip": "GOVERNANCE.MANAGE_HOLDS.DIALOG_TITLE",
+                "description": "Bulk Legal Hold option in bulk dropdown to assign legal hold to multiple files",
+                "icon": "back_hand",
+                "type": "custom",
+                "actions": {
+                    "click": "bulk-holds-warning.actions.execute"
+                },
+                "rules": {
+                    "visible": "app.manage.holds.canManageHolds"
+                }
+              }
+        ],
+
+        "icons": [
+            {
+                "id": "adf:security_mark",
+                "value": "./assets/images/security-marks.svg"
+            }
+        ],
+
+        "contextMenu": [
+            {
+                "id": "app.context.menu.share",
+                "rules": {
+                    "visible": "app.context.canShareRecord"
+                },
+                "order": 100
+            },
+            {
+                "id": "app.context.menu.preview",
+                "order": 300,
+                "rules": {
+                    "visible": "app.glacier.canView"
+                }
+            },
+            {
+                "id": "app.context.menu.download",
+                "order": 200,
+                "rules": {
+                    "visible": "app.glacier.canDownload"
+                }
+            },
+            {
+                "id": "declare-record.actions",
+                "order": 800,
+                "title": "GOVERNANCE.DECLARE-RECORD.TITLE",
+                "icon": "inventory_2",
+                "actions": {
+                    "click": "declare-record.actions.execute"
+                },
+                "rules": {
+                    "visible": "app.selection.canDeclareAsRecord"
+                }
+            },
+            {
+                "id": "app.context.record.menu.move",
+                "title": "GOVERNANCE.MOVE-RECORD.TITLE",
+                "order": 900,
+                "icon": "drive_file_move",
+                "actions": {
+                    "click": "move-record.actions.execute"
+                },
+                "rules": {
+                    "visible": "app.record.canUpdateRecord"
+                }
+            },
+            {
+                "id": "app.context.menu.manageHolds",
+                "title": "GOVERNANCE.MANAGE_HOLDS.MENU_TITLE",
+                "order": 1600,
+                "icon": "back_hand",
+                "actions": {
+                    "click": "manage-holds.actions.execute"
+                },
+                "rules": {
+                    "visible": "app.manage.holds.canManageHoldsContextMenu"
+                }
+            },
+            {
+                "id": "app.context.record.menu.securityMarks",
+                "title": "GOVERNANCE.SECURITY_MARKS.MENU_TITLE",
+                "order": 1550,
+                "icon": "adf:security_mark",
+                "actions": {
+                    "click": "manage-security-mark.actions.execute"
+                },
+                "rules": {
+                    "visible": "isAGSInstalled"
+                }
+            },
+            {
+                "id": "app.context.menu.copy",
+                "order": 1000,
+                "rules": {
+                    "visible": "app.context.canCopyNonRecord"
+                }
+            },
+            {
+                "id": "app.context.menu.move",
+                "order": 900,
+                "rules": {
+                    "visible": "app.context.canDeleteNonRecord"
+                }
+            },
+            {
+                "id": "app.context.menu.delete",
+                "order": 1100,
+                "rules": {
+                    "visible": "app.record.canDeleteStoredNode"
+                }
+            },
+            {
+                "id": "app.context.menu.versions",
+                "order": 1400,
+                "rules": {
+                    "visible": "app.context.canViewVersionNonRecord"
+                }
+            },
+            {
+                "id": "app.context.menu.permissions",
+                "order": 1500,
+                "rules": {
+                    "visible": "app.context.canViewPermissionNonRecord"
+                }
+            },
+            {
+                "id": "app.context.toggleLock",
+                "order": 110,
+                "rules": {
+                    "visible": ["app.context.canToggleLockNonRecord"]
+                }
+            },
+            {
+                "id": "content-services.components.edit-word",
+                "rules": {
+                    "visible": ["app.context.canOpenRecordWithOffice"]
+                }
+            },
+            {
+                "id": "content-services.components.edit-powerpoint",
+                "rules": {
+                    "visible": ["app.context.canOpenRecordWithOffice"]
+                }
+            },
+            {
+                "id": "content-services.components.edit-excel",
+                "rules": {
+                    "visible": ["app.context.canOpenRecordWithOffice"]
+                }
+            },
+            {
+                "id": "app.context.menu.uploadNodeVersion",
+                "order": 500,
+                "rules": {
+                    "visible": ["app.context.canUploadNodeVersionNonRecord"]
+                }
+            },
+            {
+                "id": "app.context.record.menu.delete",
+                "title": "GOVERNANCE.DELETE-RECORD.TITLE",
+                "order": 800,
+                "icon": "delete_sweep",
+                "actions": {
+                    "click": "delete-record.actions.execute"
+                },
+                "rules": {
+                    "visible": "app.record.canDeleteFiles"
+                }
+            }
+        ],
+
+        "viewer": {
+            "toolbarActions": [
+                {
+                    "id": "app.viewer.share",
+                    "rules": {
+                        "visible": "app.record.canShareRecord"
+                    }
+                },
+                {
+                    "id": "app.viewer.toolbar.more",
+                    "children": [
+                        {
+                            "id": "app.viewer.toggleLock",
+                            "rules": {
+                                "visible": ["app.context.canToggleLockNonRecord"]
+                            }
+                        },
+                        {
+                            "id": "content-services.components.edit-word",
+                            "rules": {
+                                "visible": ["app.context.canOpenRecordWithOffice"]
+                            }
+                        },
+                        {
+                            "id": "content-services.components.edit-powerpoint",
+                            "rules": {
+                                "visible": ["app.context.canOpenRecordWithOffice"]
+                            }
+                        },
+                        {
+                            "id": "content-services.components.edit-excel",
+                            "rules": {
+                                "visible": ["app.context.canOpenRecordWithOffice"]
+                            }
+                        },
+                        {
+                            "id": "declare-record.actions",
+                            "order": 410,
+                            "title": "GOVERNANCE.DECLARE-RECORD.TITLE",
+                            "icon": "inventory_2",
+                            "actions": {
+                                "click": "declare-record.actions.execute"
+                            },
+                            "rules": {
+                                "visible": "app.selection.canDeclareAsRecord"
+                            }
+                        },
+                        {
+                            "id": "app.context.record.menu.delete",
+                            "title": "GOVERNANCE.DELETE-RECORD.TITLE",
+                            "order": 300,
+                            "icon": "delete_sweep",
+                            "actions": {
+                                "click": "delete-record.actions.execute"
+                            },
+                            "rules": {
+                                "visible": "app.record.canDeleteFiles"
+                            }
+                        },
+                        {
+                            "id": "app.toolbar.record.move",
+                            "order": 300,
+                            "title": "GOVERNANCE.MOVE-RECORD.TITLE",
+                            "icon": "drive_file_move",
+                            "rules": {
+                                "visible": "app.record.canUpdateRecord"
+                            },
+                            "actions": {
+                                "click": "move-record.actions.execute"
+                            }
+                        },
+                        {
+                            "id": "app.viewer.copy",
+                            "order": 700,
+                            "rules": {
+                                "visible": "app.context.canCopyNonRecord"
+                            }
+                        },
+                        {
+                            "id": "app.viewer.move",
+                            "order": 600,
+                            "rules": {
+                                "visible": "app.context.canDeleteNonRecord"
+                            }
+                        },
+                        {
+                            "id": "app.viewer.delete",
+                            "rules": {
+                                "visible": "app.record.canDeleteStoredNode"
+                            }
+                        },
+                        {
+                            "id": "app.toolbar.uploadNodeVersion",
+                            "rules": {
+                                "visible": ["app.context.canUploadNodeVersionNonRecord"]
+                            }
+                        },
+                        {
+                            "id": "app.viewer.versions",
+                            "rules": {
+                                "visible": "app.context.canViewVersionNonRecord"
+                            }
+                        },
+                        {
+                            "id": "app.viewer.permissions",
+                            "rules": {
+                                "visible": "app.context.canViewPermissionNonRecord"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "rules": {
+                "showNavigation": "!app.selection.isRecord"
+            }
+        },
+
+        "sidebar": {
+            "tabs": [
+                {
+                    "id": "app.sidebar.versions",
+                    "rules": {
+                        "visible": "app.sidebar.canUpdateVersionNonRecord"
+                    }
+                }
+            ]
+        },
+
+        "documentList": {
+            "files": [
+                {
+                    "id": "app.files.securityMarks",
+                    "key": "securityMarks",
+                    "title": "GOVERNANCE.SECURITY_MARKS.COLUMNS.NAME",
+                    "type": "text",
+                    "class": "adf-ellipsis-cell adf-expand-cell-5",
+                    "desktopOnly": true,
+                    "order": 55,
+                    "template": "app.display.security.marks",
+                    "draggable": true,
+                    "rules": {
+                        "visible": "isAGSInstalled"
+                    }
+                }
+            ]
+        },
+        "badges": [
+            {
+                "id": "app.record.badge",
+                "icon": "inventory_2",
+                "tooltip": "GOVERNANCE.RECORD-NAME.ICONS-TOOLTIP-MESSAGE.RECORD-HYPERLINK",
+                "actions": {
+                    "click": "OPEN_RECORD_INFO_DRAWER"
+                },
+                "rules": {
+                    "visible": "app.selection.isRecord"
+                }
+            },
+            {
+                "id": "app.rejected.record.badge",
+                "icon": "adf:rejected",
+                "tooltip": "GOVERNANCE.RECORD-NAME.ICONS-TOOLTIP-MESSAGE.REJECTED-RECORD",
+                "actions": {
+                    "click": "OPEN_RECORD_INFO_DRAWER"
+                },
+                "rules": {
+                    "visible": "app.selection.isRejectedRecord"
+                }
+            },
+            {
+                "id": "app.glacier.stored.badge",
+                "icon": "adf:store",
+                "tooltip": "GOVERNANCE.GLACIER.ICONS-TOOLTIP-MESSAGE.STORE",
+                "rules": {
+                    "visible": "app.glacier.isStored"
+                }
+            },
+            {
+                "id": "app.glacier.pending.restore.badge",
+                "icon": "autorenew",
+                "tooltip": "GOVERNANCE.GLACIER.ICONS-TOOLTIP-MESSAGE.PENDING-RESTORE",
+                "rules": {
+                    "visible": "app.glacier.isPendingRestore"
+                }
+            },
+            {
+                "id": "app.glacier.restored.badge",
+                "icon": "adf:restore",
+                "tooltip": "GOVERNANCE.GLACIER.ICONS-TOOLTIP-MESSAGE.RESTORED",
+                "rules": {
+                    "visible": "app.glacier.isRestored"
+                }
+            },
+            {
+                "id": "app.manage.holds.badge",
+                "component": "app.manage.holds.hold-icon",
+                "rules": {
+                    "visible": "app.manage.holds.isNodeOnHold"
+                }
+            }
+        ]
+    }
+}

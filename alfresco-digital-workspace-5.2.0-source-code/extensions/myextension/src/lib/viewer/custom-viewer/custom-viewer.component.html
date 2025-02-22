@@ -1,0 +1,19 @@
+<!-- OLD CODE:
+<iframe
+class="responsive-iframe"
+src="http://192.168.82.62:8080/OpenAnnotate/viewer.htm?docId=workspace://SpacesStore/50cbf72c-1be8-4ec8-b48e-42bced209d78"
+title="About Us">
+</iframe>
+-->
+
+
+<!-- NEW CODE - custom-viewer.component.html -->
+<div class="iframe-container">
+    <iframe
+      id="customViewerIframe"
+      class="responsive-iframe"
+      title="Enterprise Viewer"
+      [src]="enterpriseViewerUrl"
+    ></iframe>
+  </div>
+  

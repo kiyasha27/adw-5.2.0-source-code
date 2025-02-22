@@ -1,0 +1,167 @@
+/* stylelint-disable scss/no-global-function-names */
+/* stylelint-disable value-keyword-case */
+@use '@angular/material' as mat;
+@import '@fontsource/open-sans';
+@import 'material-icons/iconfont/material-icons.css';
+@import '@alfresco/aca-content/ui/application';
+@import 'libs/content-ee/content-services-extension/styles';
+
+$grey-background: rgba(33, 33, 33, 0.12);
+$grey-text-background: rgba(33, 33, 33, 0.05);
+$blue-border: rgb(42, 125, 225);
+$grey-font: rgba(33, 35, 40, 0.6);
+$font-color: rgba(70, 64, 64, 0.87);
+$focus-color: rgb(31, 116, 219);
+
+body,
+html {
+    height: 100%;
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+$foreground: map-get($custom-theme, foreground);
+$background: map-get($custom-theme, background);
+$warn: map-get($custom-theme, warn);
+$accent: map-get($custom-theme, accent);
+$primary: map-get($custom-theme, primary);
+
+// map SCSS variables to expose as CSS variables
+$defaults: (
+    --theme-black-font-color: $font-color,
+    --theme-grey-font-color: $grey-font,
+    --theme-grey-text-background: $grey-text-background,
+    --theme-grey-background: $grey-background,
+    --theme-blue-border-color: $blue-border,
+    --theme-primary-color: mat.get-color-from-palette($primary),
+    --theme-warn-color: mat.get-color-from-palette($warn),
+    --theme-warn-color-default-contrast: mat.get-color-from-palette($warn, default-contrast),
+    --theme-accent-color: mat.get-color-from-palette($accent),
+    --theme-background-color: mat.get-color-from-palette($background, background),
+    --theme-text-fg-color: mat.get-color-from-palette($foreground, text),
+    --theme-text-color: mat.get-color-from-palette($foreground, text, 0.54),
+    --theme-text-bold-color: mat.get-color-from-palette($foreground, text, 0.87),
+    --theme-text-disabled-color: mat.get-color-from-palette($foreground, text, 0.38),
+    --theme-border-color: mat.get-color-from-palette($foreground, text, 0.07),
+    --theme-border-color-light: mat.get-color-from-palette($foreground, text, 0.2),
+    --theme-card-background-color: mat.get-color-from-palette($background, card),
+    --theme-foreground-text-color: mat.get-color-from-palette($foreground, text, 0.72),
+    --theme-foreground-text-bold-color: mat.get-color-from-palette($foreground, text, 0.87),
+    --theme-secondary-text-color: mat.get-color-from-palette($foreground, secondary-text),
+    --theme-divider-color: mat.get-color-from-palette($foreground, divider, 0.07),
+    --theme-dialog-bg-color: mat.get-color-from-palette($background, dialog),
+    --theme-selected-button-bg-color: mat.get-color-from-palette($background, selected-button),
+    --theme-body-1-font-size: mat.font-size($app-typography, body-1),
+    --theme-body-1-line-height: mat.line-height($app-typography, body-1),
+    --theme-caption-font-size: mat.font-size($app-typography, caption),
+    --theme-title-font-size: mat.font-size($app-typography, headline-6),
+    --theme-subheading-2-font-size: mat.font-size($app-typography, subtitle-1),
+    --theme-button-font-size: mat.font-size($app-typography, button),
+    --theme-adw-toolbar-background-color: mat.get-color-from-palette($background, app-bar)
+);
+
+// propagates SCSS variables into the CSS variables scope
+:root {
+    @each $name, $value in $defaults {
+        #{$name}: #{$value};
+    }
+}
+
+// TODO: review the need to copy the style from ADF breadcrumb
+.adf-breadcrumb-item {
+    padding-right: 2px;
+    overflow: hidden;
+    display: flex;
+    line-height: 33px;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.15px;
+    text-align: left;
+    color: var(--theme-text-color);
+    flex: 0 1 auto;
+    min-width: 35px;
+    margin-top: auto;
+    text-overflow: ellipsis;
+
+    &:hover,
+    &.adf-active {
+        color: var(--adf-breadcrumb-item-active-hover-color);
+    }
+
+    &.adf-active {
+        color: var(--adf-breadcrumb-item-active-color);
+    }
+
+    &-chevron {
+        opacity: 1;
+        margin-top: 9px;
+        font-size: 17px;
+    }
+
+    &-anchor {
+        box-sizing: border-box;
+        color: inherit;
+        text-decoration: none;
+        display: inline-block;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        flex: 0 1 auto;
+        padding: 0 2px;
+        text-align: center;
+
+        &:focus {
+            outline: 1px solid var(--theme-accent-color-a200);
+            outline-offset: -1px;
+        }
+    }
+}
+
+//changes the colour of the sidenav bar - top header
+//alternatively, im using the header to display my logo image so its big enough
+.app-sidenav-header {
+    padding-top: 25px;
+    background-color: #fff8eb;
+    background-image: url('./assets/images/full-logo.png'); /* Relative path from your CSS file location */
+    background-size: 55%; /* Adjust the size (percentage or specific value) */
+    background-position: left; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+
+//changes the colour of the sidenav bar - middle block (all menu options)
+ .aca-sidenav__section{
+    background-color: #fff8eb;
+    padding-top: 10%;
+}
+
+//changes the colour of the sidenav bar - bottom block
+.mat-drawer-inner-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #fff8eb
+}
+
+
+// by default it displays the tiny logo on the UI, edited the width so it does not show
+.aca-sidenav-header-title-logo img {
+    width: 1%; /* or any desired width */
+    height: auto; /* maintains aspect ratio */
+}
+
+//N/A 
+.aca-sidenav-header-title-text{
+    flex: 1;
+    color: aqua;
+    padding-left: 12px;
+    letter-spacing: .25px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: large;
+    
+}

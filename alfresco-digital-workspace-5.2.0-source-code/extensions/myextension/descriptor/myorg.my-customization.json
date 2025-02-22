@@ -1,0 +1,86 @@
+{
+  "$version": "0.1.0",
+  "$id": "my-extension-id",
+  "$name": "your plugin name",
+  "$vendor": "Your amazing company",
+  "$license": "LGPL-3.0",
+  "$description": "Just a hello world",
+
+  "routes": [
+    {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "my-page",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.hello.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    }
+  ],
+  "features": {
+    "viewer": {
+      "extensions": [
+        {
+          "fileExtension": "csv",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "txt",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "pdf",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "json",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "jpeg",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "png",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "jpg",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "mp4",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "xls",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "doc",
+          "component": "my-org.components.custom-viewer"
+        },
+        {
+          "fileExtension": "ppt",
+          "component": "my-org.components.custom-viewer"
+        }
+      ]
+    },
+    "navbar": [
+      {
+        "id": "app.navbar.primary",
+        "items": [
+          {
+            "id": "app.navbar.hello",
+            "title": "My Dashboard",
+            "route": "app.route.my-unique-route-id",
+            "description": "My Dashboard",
+            "order": 1,
+            "rules": {
+              "visible": "app.content-services.isEnabled"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+/*
+ * Copyright © 2005-2024 Hyland Software, Inc. and its affiliates. All rights reserved.
+ *
+ * License rights for this program may be obtained from Hyland Software, Inc.
+ * pursuant to a written agreement and any use of this program without such an
+ * agreement is prohibited.
+ */
+
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+void platformBrowserDynamic().bootstrapModule(AppModule);

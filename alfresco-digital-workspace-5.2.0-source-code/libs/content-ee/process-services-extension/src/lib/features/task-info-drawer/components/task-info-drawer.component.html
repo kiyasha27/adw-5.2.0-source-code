@@ -1,0 +1,50 @@
+<div *ngIf="isLoading; else showInfoDrawer">
+    <mat-progress-bar mode="indeterminate"/>
+</div>
+<ng-template #showInfoDrawer>
+    <adf-info-drawer [title]="taskDetails?.name ? taskDetails.name : 'No name'" [selectedIndex]="focusedTab" (currentTab)="onTabChange($event)" class="aps-task-metadata-drawer">
+        <adf-info-drawer-tab label="ADF_TASK_LIST.DETAILS.LABELS.INFO_DRAWER_TAB_DETAILS_TITLE">
+            <div class="aps-task-metadata-container">
+                <div class="aps-task-metadata-edit-panel">
+                    <button
+                        *ngIf="!editMode"
+                        mat-icon-button
+                        (click)="toggleEditing()"
+                        [disabled]="!!this.taskDetails?.endDate"
+                        [attr.title]="'CORE.METADATA.ACTIONS.EDIT' | translate"
+                        [attr.aria-label]="'CORE.METADATA.ACCESSIBILITY.EDIT' | translate"
+                        data-automation-id="meta-data-general-info-edit"
+                        class="adf-edit-icon-buttons">
+                        <mat-icon>mode_edit</mat-icon>
+                    </button>
+                    <div *ngIf="editMode" class="adf-metadata-action-buttons">
+                        <button
+                            mat-icon-button
+                            [attr.title]="'CORE.METADATA.ACTIONS.CANCEL' | translate"
+                            data-automation-id="reset-metadata"
+                            (click)="resetChanges()"
+                            class="adf-metadata-action-buttons-clear">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <button
+                            mat-icon-button
+                            [attr.title]="'CORE.METADATA.ACTIONS.SAVE' | translate"
+                            color="primary"
+                            (click)="saveChanges()"
+                            data-automation-id="save-general-info-metadata"
+                            [disabled]="!hasMetadataChanged">
+                            <mat-icon>check</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <adf-task-header [taskDetails]="taskDetails" [readOnly]="!editMode"
+                                 [resetChanges]="resetChangesEvent" [showClaimRelease]="false"/>
+            </div>
+        </adf-info-drawer-tab>
+        <adf-info-drawer-tab label="APP.INFO_DRAWER.TABS.COMMENTS">
+            <div class="aps-task-comments-container">
+                <adf-task-comments [taskId]="taskDetails.id" [readOnly]="false"/>
+            </div>
+        </adf-info-drawer-tab>
+    </adf-info-drawer>
+</ng-template>

@@ -1,0 +1,149 @@
+.aga-security-mark-dialog {
+    height: 100%;
+
+    .app-security-marks-dialog-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .adw-dialog-title {
+        width: 85%;
+        vertical-align: top;
+        display: inline-block;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    #help-button-container {
+        vertical-align: top;
+        float: right;
+        display: flex;
+        width: 13%;
+    }
+
+    .app-security-marks-table {
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    tr {
+        align-items: center;
+        height: 32px;
+    }
+
+    td {
+        background: var(--theme-grey-text-background);
+        padding: 9px;
+        height: 24px;
+        max-width: 75%;
+        font-style: normal;
+        font-size: 14px;
+        line-height: 24px;
+        border-radius: 20px;
+        float: left;
+        margin-right: 15px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+    }
+
+    #selected {
+        background-color: var(--theme-background-color);
+        border: 2px solid var(--theme-blue-border-color);
+        border-style: solid;
+        border-width: 3px;
+        padding: 6px;
+    }
+
+    hr {
+        width: 600px;
+        border: 1px solid var(--theme-grey-background);
+    }
+
+    #cancel-button {
+        background: var(--theme-grey-background);
+    }
+
+    .aga-button-disabled {
+        background: var(--theme-grey-text-background);
+    }
+
+    .adw-dialog-actions {
+        padding: 12px;
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+    }
+
+    .app-security-marks-container {
+        margin: 24px 24px 0;
+    }
+
+    .app-security-marks-content {
+        margin: 0 1px;
+        overflow: initial;
+    }
+
+    .app-mat-divider {
+        border-top-width: 2px;
+    }
+
+    .app-security-marks-help-icon {
+        color: var(--theme-black-font-color);
+    }
+
+    .app-help-close-icon {
+        margin-bottom: 16px;
+    }
+
+    .app-security-marks-help-title {
+        vertical-align: top;
+        display: flex;
+        width: 13%;
+        float: right;
+    }
+
+    #security-marks-help-div {
+        display: flex;
+    }
+
+    .app-applied-btn,
+    .app-non-applied-btn {
+        margin-top: 12px;
+        margin-right: 12px;
+        padding: 3px;
+        border-radius: 20px;
+        display: inline-block;
+        height: 14px;
+    }
+
+    .app-applied-btn {
+        width: 30px;
+        border: 3px solid var(--theme-blue-border-color);
+        background-color: var(--theme-background-color);
+    }
+
+    .app-non-applied-btn {
+        background-color: var(--theme-grey-text-background);
+        width: 35px;
+    }
+
+    .app-security-marks-loading-spinner {
+        margin: auto;
+    }
+}

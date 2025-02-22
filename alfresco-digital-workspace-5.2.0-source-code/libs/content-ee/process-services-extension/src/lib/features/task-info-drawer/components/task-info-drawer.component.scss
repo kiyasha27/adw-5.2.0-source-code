@@ -1,0 +1,41 @@
+aps-task-info-drawer {
+    .aps {
+        &-task-metadata-container {
+            word-break: break-all;
+        }
+
+        &-task-metadata-drawer {
+            width: 350px;
+        }
+
+        &-task-metadata-edit-panel {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        &-task-comments-container {
+            margin: 16px;
+            word-break: break-all;
+        }
+    }
+
+    .adf-info-drawer-layout {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        min-height: 100%;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &-header {
+            height: 28px;
+        }
+    }
+
+    .adf-textitem-clickable {
+        .adf-textitem-action {
+            display: none;
+        }
+    }
+}

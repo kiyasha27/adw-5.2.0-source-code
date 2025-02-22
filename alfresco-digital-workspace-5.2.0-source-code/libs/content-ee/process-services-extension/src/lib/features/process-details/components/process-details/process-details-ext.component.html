@@ -1,0 +1,53 @@
+<div class="adf-content-border" *ngIf="processId">
+    <adf-tasklist
+        id="aps-tasklist-id"
+        [processInstanceId]="processId"
+        [stickyHeader]="true"
+        [presetColumn]="presetColumn"
+        [selectFirstRow]="false"
+        [state]="'all'"
+        [sort]="'created-desc'"
+        [selectionMode]="'multiple'"
+        [multiselect]="true"
+        [isResizingEnabled]="true"
+        [blurOnResize]="false"
+        (rowsSelected)="onRowsSelected($event)"
+        #taskList
+        acaContextActions
+        [customActions]="taskListContextMenuActions"
+    >
+        <data-columns>
+            <data-column
+                key="endDate"
+                type="date"
+                title="ADF_TASK_LIST.PROPERTIES.STATUS"
+                [sortable]="true"
+                [order]="4"
+                class="adf-no-grow-cell adf-data-table-cell"
+                [draggable]="true">
+                <ng-template let-entry="$implicit">
+                    <div title="{{ ('PROCESS-EXTENSION.STATUS.' + (entry.row.obj?.endDate ? 'COMPLETED' : 'OPEN')) | translate }}">
+                        {{ ('PROCESS-EXTENSION.STATUS.' + (entry.row.obj?.endDate ? 'COMPLETED' : 'OPEN')) | translate }}
+                    </div>
+                </ng-template>
+            </data-column>
+            <data-column
+                key="assignee"
+                title="ADF_TASK_LIST.PROPERTIES.ASSIGNEE"
+                [sortable]="false"
+                [order]="5"
+                class="desktop-only adf-no-grow-cell adf-data-table-cell--ellipsis"
+                [draggable]="true">
+                <ng-template let-entry="$implicit">
+                    <div title="{{ entry.row.obj.assignee | fullName }}">
+                        {{ entry.row.obj.assignee | fullName }}
+                    </div>
+                </ng-template>
+            </data-column>
+        </data-columns>
+    </adf-tasklist>
+    <adf-pagination
+        [target]="taskList"
+        [supportedPageSizes]="supportedPageSizes"
+        (changePageSize)="onChangePageSize($event)" />
+</div>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <!-- Font Awesome CSS for icons in the document, sites and activities cards -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    
+
+    <div class="card-row0">
+        <div class="card">
+            <!-- Card Header: Title and Count of Sites -->
+            <div class="card-header">
+                <h2 class="card-title">My Libraries ({{ sites.length }})</h2>
+            </div>
+            <div class="card-body">
+                <!-- Table Container for Sites -->
+                <div class="sites-table-container">
+                    <table class="sites-table">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                            </tr>
+                            <!-- Loop through each site -->
+                            <tr *ngFor="let site of sites">
+                                <td>
+                                    <i class="fas fa-globe site-icon"></i>
+                                    {{ site.title }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-row1">
+        <div class="card-tasks1-1">
+            <!-- Card Header: Title and Count of Documents -->
+            <div class="card-header-tasks1-1">
+                <h2 class="card-title-tasks1-1">My Recent Documents ({{ documents.length }})</h2>
+            </div>
+            <!-- Table Container for Documents -->
+            <div class="documents-table-container">
+                <table class="documents-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Created At</th>
+                            <th>Modified At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let doc of documents; let i = index">
+                            <td>
+                                <i class="file-icon" [ngClass]="getIconClass(doc.content.mimeTypeName)"></i>
+                                <!-- Clicking the link will open the file in a new tab -->
+                                <a [href]="getDocumentUrl(doc.id)" target="_blank" class="doc-link" title="Click here to open file.">
+                                    {{ doc.name }}
+                                </a>
+                            </td>
+                            <td>{{ doc.createdAt | date: 'short' }}</td>
+                            <td>{{ doc.modifiedAt | date: 'short' }}</td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+            <!-- Message if no documents found -->
+            <p *ngIf="documents?.length === 0">
+                No documents found.
+            </p>
+        </div>
+    </div>
+
+    <div class="card-row2">
+        <!-- Card: My Tasks -->
+        <div class="card-tasks2">
+<div class="card-header-activities">
+            <h2 class="card-title-activities">My Activities</h2>
+        </div>
+        <div class="activities-container">
+            <!-- Loop through each activity -->
+            <div *ngFor="let activity of activities" class="activity-item">
+                <hr>
+                <p>{{ activity.postedAt | date: 'short' }}</p>
+                <p>{{ activity.feedPersonId }} {{ activity.activityTypeDescription }} <i class="fas fa-file activities-file-icon"></i> {{ activity.activitySummary.title }} in site <i class="fas fa-globe activities-site-icon"></i> {{ activity.siteId }} <br><br><em>{{ activity.timeAgo }}</em></p>
+            </div>
+        </div>
+        </div>
+    
+        
+        <!-- Card: Queued Tasks -->
+        <div class="card-tasks2">
+            <div class="card-header-tasks2">
+                <h2 class="card-title-tasks2">Queued Tasks</h2>
+                <div class="number-block">{{ myQueuedTasks.length }}</div>
+            </div>
+            <!-- Table Container for Tasks -->
+            <div class="tasks-table-container">
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Task Name</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through each task -->
+                        <tr *ngFor="let task of myQueuedTasks">
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.name }}</td>
+                            <td>{{ task.created | date:'short' }}</td>
+                        </tr>
+                        <!-- Message if no tasks found -->
+                        <tr *ngIf="myQueuedTasks.length === 0">
+                            <td>No tasks were found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        
+        <!-- Card: Completed Tasks -->
+        <div class="card-tasks2">
+            <div class="card-header-tasks2">
+                <h2 class="card-title-tasks2">Completed Tasks</h2>
+                <div class="number-block">{{ myCompletedTasks.length }}</div>
+            </div>
+            <!-- Table Container for Tasks -->
+            <div class="tasks-table-container">
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Task Name</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through each task -->
+                        <tr *ngFor="let task of myCompletedTasks">
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.name }}</td>
+                            <td>{{ task.endDate | date:'short' }}</td>
+                        </tr>
+                        <!-- Message if no tasks found -->
+                        <tr *ngIf="myCompletedTasks.length === 0">
+                            <td>No tasks found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+
+    <!-- Card: My Activities -->
+    
+    <div class="card-activities">
+                    <!-- Card Header: Title and Count of My Tasks -->
+                    <div class="card-header-tasks2">
+                        <h2 class="card-title-tasks2">My Tasks</h2>
+                        <div class="number-block">{{ myTasks.length }}</div>
+                    </div>
+                    <!-- Table Container for Tasks -->
+                    <div class="tasks-table-container">
+                        <table class="tasks-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Task Name</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loop through each task -->
+                                <tr *ngFor="let task of myTasks" (click)="openTask(task.id)" title="Click here to launch task">
+                                    <td>{{ task.id }}</td>
+                                    <td>{{ task.name }}</td>
+                                    <td>{{ task.created | date:'short' }}</td>
+                                </tr>
+                                <!-- Message if no tasks found -->
+                                <tr *ngIf="myTasks.length === 0">
+                                    <td>No tasks found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+     </div>
+     
+    </div>
+    
+</body>
+</html>

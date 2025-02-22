@@ -1,0 +1,39 @@
+<div *ngIf="isFirstLoading && !(areHoldsLoaded$ | async)" class="aga-loading-spinner-container">
+    <mat-progress-spinner [diameter]="50" color="primary" mode="indeterminate" />
+</div>
+
+<mat-tab-group
+    #tabGroup
+    mat-stretch-tabs
+    [attr.data-automation-id]="'adw-manage-holds-tabs'"
+    (selectedIndexChange)="switchTab(tabGroup, $event)"
+    class="aga-manage-holds-tabs"
+    animationDuration="0"
+    dynamicHeight
+>
+    <mat-tab label="{{ 'GOVERNANCE.MANAGE_HOLDS.TAB_EXISTING_HOLDS' | translate }}">
+        <ng-template matTabContent>
+            <aga-manage-bulk-existing-holds
+                *ngIf="operationMode === OperationMode.BULK"
+                [nodeId]="nodeId"
+                [operationMode]="OperationMode.BULK"
+                (valueChange)="onListValueChange($event)"
+                (numberOfHoldsLoaded)="onHoldsLoaded($event)"
+                (switchTabToApplyHold)="tabGroup.selectedIndex = 1"
+            />
+            <aga-manage-single-existing-holds
+                *ngIf="operationMode === OperationMode.SINGLE"
+                [nodeId]="nodeId"
+                [operationMode]="OperationMode.SINGLE"
+                (valueChange)="onListValueChange($event)"
+                (numberOfHoldsLoaded)="onHoldsLoaded($event)"
+                (switchTabToApplyHold)="tabGroup.selectedIndex = 1"
+            />
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="{{ 'GOVERNANCE.MANAGE_HOLDS.TAB_CREATE_LEGAL_HOLD' | translate }}">
+        <ng-template matTabContent>
+            <aga-create-hold (valueChange)="onFormValueChange($event)" (formValidationChange)="onFormValidationChange($event)" />
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

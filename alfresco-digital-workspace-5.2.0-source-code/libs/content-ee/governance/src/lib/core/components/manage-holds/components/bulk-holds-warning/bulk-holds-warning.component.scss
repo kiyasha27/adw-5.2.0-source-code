@@ -1,0 +1,13 @@
+.aga-bulk-holds-warning-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    color: var(--theme-text-color);
+}
+
+.aga-bulk-holds-warning-bold {
+    font-weight: bold;
+    color: var(--theme-text-bold-color);
+}

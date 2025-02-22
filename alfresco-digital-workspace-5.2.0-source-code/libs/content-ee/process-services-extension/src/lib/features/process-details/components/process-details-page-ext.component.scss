@@ -1,0 +1,22 @@
+aps-process-details-page-ext {
+    aca-page-layout-header {
+        justify-content: space-between;
+
+        .adf-breadcrumb-item {
+            margin-top: inherit;
+        }
+
+        .aps-process-list-toolbar-actions {
+            display: flex;
+            align-items: center;
+
+            .aps-selected-action {
+                color: var(--theme-primary-color);
+            }
+        }
+    }
+}
+
+.aps-sidebar {
+    width: 350px;
+}
