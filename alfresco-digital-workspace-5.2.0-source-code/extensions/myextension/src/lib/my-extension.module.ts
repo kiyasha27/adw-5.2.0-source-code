@@ -4,12 +4,13 @@ import { ExtensionService, provideExtensionConfig } from '@alfresco/adf-extensio
 import { HelloComponent } from './pages/hello/hello.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+
 @NgModule({
   
   imports: [
     CommonModule,
-    MatSnackBarModule
-   // CustomViewerComponent
+   MatSnackBarModule
+   //CustomViewerComponent
   ],
   providers: [
     // Provide your extension descriptor JSON

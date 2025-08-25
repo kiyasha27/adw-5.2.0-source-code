@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SitesService } from '@alfresco/adf-content-services';
-import { SearchService} from '@alfresco/adf-content-services';
 import { AuthenticationService } from '@alfresco/adf-core';
+/* import { SitesService } from '@alfresco/adf-content-services';
+import { SearchService} from '@alfresco/adf-content-services';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TaskListService } from '@alfresco/adf-process-services';
+import { TaskListService } from '@alfresco/adf-process-services'; */
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 
@@ -39,11 +39,11 @@ activityList: any[] = [];
  myTasks: any[] = [];
    //--------------------------------------------------------------------constructor starts here
   constructor(
-    private sitesServices: SitesService,
-    private searchService: SearchService,
+    // private sitesServices: SitesService,
+    // private searchService: SearchService,
     private authService: AuthenticationService,
-    private http: HttpClient,
-    private taskListService: TaskListService,
+    // private http: HttpClient,
+    // private taskListService: TaskListService,
   ){} 
   //--------------------------------------------------------------------constructor ends here
 
@@ -56,7 +56,8 @@ ngOnInit() {
   // Retrieve ECM username for content services purposes
   this.currentUser = this.authService.getUsername();
   console.log('Current ECM Username:', this.currentUser);
-  
+}
+/*
   // Log current APS username for task queries (assuming getBpmUsername() is available)
   const bpmUsername = this.authService.getBpmUsername();
   console.log('Current APS Username:', bpmUsername);
@@ -98,7 +99,7 @@ ngOnInit() {
 
 //--------------------------------------------------------------------other methods start here
 // To open and navigate a user to the selected task in the ADW
-openTask(taskId: string): void {
+ openTask(taskId: string): void {
   const taskUrl = `http://localhost:8080/#/apps/0/task-details/${taskId}`;
   window.location.replace(taskUrl);
 }
@@ -328,5 +329,6 @@ calculateTimeAgo(postedAt: string): string {
 }
 //--------------------------------------------------------------------other methods ends here
 
+*/
 
 }
