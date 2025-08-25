@@ -124,17 +124,17 @@ $defaults: (
 //changes the colour of the sidenav bar - top header
 //alternatively, im using the header to display my logo image so its big enough
 .app-sidenav-header {
-    padding-top: 25px;
-    background-color: #fff8eb;
-    background-image: url('./assets/images/full-logo.png'); /* Relative path from your CSS file location */
-    background-size: 55%; /* Adjust the size (percentage or specific value) */
+    //padding-top: 25px;
+    background-color: #ffffff;
+    background-image: url('./assets/images/rsl-adw-logo.png'); /* Relative path from your CSS file location */
+    background-size: 65%; /* Adjust the size (percentage or specific value) */
     background-position: left; /* Center the image */
     background-repeat: no-repeat; /* Prevent the image from repeating */
 }
 
 //changes the colour of the sidenav bar - middle block (all menu options)
  .aca-sidenav__section{
-    background-color: #fff8eb;
+    background-color: #ffffff;
     padding-top: 10%;
 }
 
@@ -144,7 +144,7 @@ $defaults: (
     height: 100%;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    background-color: #fff8eb
+    background-color: #ffffff
 }
 
 
@@ -154,14 +154,3 @@ $defaults: (
     height: auto; /* maintains aspect ratio */
 }
 
-//N/A 
-.aca-sidenav-header-title-text{
-    flex: 1;
-    color: aqua;
-    padding-left: 12px;
-    letter-spacing: .25px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: large;
-    
-}

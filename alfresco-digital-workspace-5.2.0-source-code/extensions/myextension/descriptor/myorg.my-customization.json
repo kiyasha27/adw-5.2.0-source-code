@@ -16,71 +16,895 @@
       "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
     }
   ],
+
   "features": {
-    "viewer": {
-      "extensions": [
-        {
-          "fileExtension": "csv",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "txt",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "pdf",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "json",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "jpeg",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "png",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "jpg",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "mp4",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "xls",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "doc",
-          "component": "my-org.components.custom-viewer"
-        },
-        {
-          "fileExtension": "ppt",
-          "component": "my-org.components.custom-viewer"
-        }
-      ]
-    },
-    "navbar": [
+
+    "toolbar": [
       {
-        "id": "app.navbar.primary",
-        "items": [
+        "id": "app.toolbar.more",
+        "type": "menu",
+        "order": 10000,
+        "icon": "more_vert",
+        "title": "APP.ACTIONS.MORE",
+        "children": [
           {
-            "id": "app.navbar.hello",
-            "title": "My Dashboard",
-            "route": "app.route.my-unique-route-id",
-            "description": "My Dashboard",
-            "order": 1,
+            "id": "app.toolbar.toggleLock",
+            "order": 110,
             "rules": {
-              "visible": "app.content-services.isEnabled"
+              "visible": ["app.context.canToggleLockNonRecord"]
             }
+          },
+         {
+              "id": "app.toolbar.dashboard",
+              "title": "Update SAD500 Data",
+              "icon": "edit",
+              "order": 1500,
+              "actions": {
+                "click": "app.actions.navigateDashboard"
+              },
+              "rules": {
+                "visible": "app.selection.file"
+              }
           }
+
         ]
       }
-    ]
+    ],
+     "search": [
+      {
+        "id": "app.search.CustomsSearch",
+        "order": 200,
+        "name": "Customs",
+        "default": false,
+        "filterWithContains": true,
+        "aca:fields": [
+          "cm:name",
+          "cm:title",
+          "cm:description",
+          "cm:identifier",
+          "cm:contributor",
+          "cm:coverage",
+          "cm:dcsource",
+          "cm:publisher",
+          "cm:rights",
+          "cm:subject",
+          "cm:type",
+          "TEXT",
+          "TAG",
+          "lracore:importerTIN",
+          "lracore:importerName",
+          "lracore:importerVATNumber",
+          "lracore:exporterTIN",
+          "lracore:exporterName",
+          "lracore:exporterVATNumber",
+          "lracore:borderPost",
+          "lracore:declarationType",
+          "lracore:dateSubmitted",
+          "lracore:declarationNumber",
+          "lracore:sad500Type",
+          "lracore:SAD500PurposeCode",
+          "lracore:sacuType",
+          "lracore:VAT11SerialNumber",
+          "lracore:vehicleModel",
+          "lracore:vehicleVINNumber",
+          "lracore:vehicleEngineNumber"
+        ],
+        "include": ["path", "allowableOperations", "properties"],
+        "sorting": {
+          "options": [
+            {
+              "key": "score",
+              "label": "SEARCH.SORT.RELEVANCE",
+              "type": "SCORE",
+              "field": "score",
+              "ascending": false
+            },
+            {
+              "key": "name",
+              "label": "SEARCH.SORT.FILENAME",
+              "type": "FIELD",
+              "field": "cm:name",
+              "ascending": true
+            },
+            {
+              "key": "title",
+              "label": "SEARCH.SORT.TITLE",
+              "type": "FIELD",
+              "field": "cm:title",
+              "ascending": true
+            },
+            {
+              "key": "created",
+              "label": "SEARCH.SORT.CREATE_DATE",
+              "type": "FIELD",
+              "field": "cm:created",
+              "ascending": true
+            }
+          ],
+          "defaults": [
+            {
+              "key": "score",
+              "type": "SCORE",
+              "field": "score",
+              "ascending": false
+            }
+          ]
+        },
+        "aca:triggeredOnChange": false,
+        "resetButton": true,
+        "filterQueries": [
+          {
+            "query": "+TYPE:'cm:folder' OR +TYPE:'cm:content'"
+          },
+          {
+            "query": "-TYPE:'cm:thumbnail' AND -TYPE:'cm:failedThumbnail' AND -TYPE:'cm:rating'"
+          },
+          { "query": "-cm:creator:System" },
+          {
+            "query": "-TYPE:'st:site' AND -ASPECT:'st:siteContainer' AND -ASPECT:'sys:hidden'"
+          },
+          {
+            "query": "-TYPE:'dl:dataList' AND -TYPE:'dl:todoList' AND -TYPE:'dl:issue'"
+          },
+          { "query": "-TYPE:'fm:topic' AND -TYPE:'fm:post'" },
+          { "query": "-TYPE:'lnk:link'" },
+          { "query": "-PATH:'//cm:wiki/*'" }
+        ],
+        "facetFields": {
+          "expanded": true,
+          "fields": [
+            {
+              "mincount": 1,
+              "field": "creator",
+              "label": "SEARCH.FACET_FIELDS.CREATOR",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            },
+            {
+              "mincount": 1,
+              "field": "cm:type",
+              "label": "Type",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            },
+            {
+              "mincount": 1,
+              "field": "cm:publisher",
+              "label": "Publisher",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            },
+            {
+              "mincount": 1,
+              "field": "cm:contributor",
+              "label": "Contributor",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            }
+          ]
+        },
+        "categories": [
+  {
+    "id": "lracore:importerTIN",
+    "name": "Importer TIN",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:importerTIN:'(.*?)'",
+        "field": "lracore:importerTIN",
+        "placeholder": "Enter Importer TIN"
+      }
+    }
+  },
+  {
+    "id": "lracore:importerName",
+    "name": "Importer Name",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:importerName:'(.*?)'",
+        "field": "lracore:importerName",
+        "placeholder": "Enter Importer Name"
+      }
+    }
+  },
+  {
+    "id": "lracore:importerVATNumber",
+    "name": "Importer VAT Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:importerVATNumber:'(.*?)'",
+        "field": "lracore:importerVATNumber",
+        "placeholder": "Enter Importer VAT Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:exporterTIN",
+    "name": "Exporter TIN",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:exporterTIN:'(.*?)'",
+        "field": "lracore:exporterTIN",
+        "placeholder": "Enter Exporter TIN"
+      }
+    }
+  },
+  {
+    "id": "lracore:exporterName",
+    "name": "Exporter Name",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:exporterName:'(.*?)'",
+        "field": "lracore:exporterName",
+        "placeholder": "Enter Exporter Name"
+      }
+    }
+  },
+  {
+    "id": "lracore:exporterVATNumber",
+    "name": "Exporter VAT Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:exporterVATNumber:'(.*?)'",
+        "field": "lracore:exporterVATNumber",
+        "placeholder": "Enter Exporter VAT Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:borderPost",
+    "name": "Border Post",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:borderPost:'(.*?)'",
+        "field": "lracore:borderPost",
+        "placeholder": "Enter Border Post"
+      }
+    }
+  },
+  {
+    "id": "lracore:declarationType",
+    "name": "Declaration Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:declarationType:'(.*?)'",
+        "field": "lracore:declarationType",
+        "placeholder": "Enter Declaration Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:dateSubmitted",
+    "name": "Date Submitted",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "date-range",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:dateSubmitted:'(.*?)'",
+        "field": "lracore:dateSubmitted",
+        "placeholder": "Enter Date Submitted"
+      }
+    }
+  },
+  {
+    "id": "lracore:declarationNumber",
+    "name": "Declaration Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:declarationNumber:'(.*?)'",
+        "field": "lracore:declarationNumber",
+        "placeholder": "Enter Declaration Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:sad500Type",
+    "name": "SAD500 Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:sad500Type:'(.*?)'",
+        "field": "lracore:sad500Type",
+        "placeholder": "Enter SAD500 Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:SAD500PurposeCode",
+    "name": "SAD500 Purpose Code",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:SAD500PurposeCode:'(.*?)'",
+        "field": "lracore:SAD500PurposeCode",
+        "placeholder": "Enter SAD500 Purpose Code"
+      }
+    }
+  },
+  {
+    "id": "lracore:sacuType",
+    "name": "SACU Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:sacuType:'(.*?)'",
+        "field": "lracore:sacuType",
+        "placeholder": "Enter SACU Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:VAT11SerialNumber",
+    "name": "VAT11 Serial Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:VAT11SerialNumber:'(.*?)'",
+        "field": "lracore:VAT11SerialNumber",
+        "placeholder": "Enter VAT11 Serial Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:vehicleModel",
+    "name": "Vehicle Model",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:vehicleModel:'(.*?)'",
+        "field": "lracore:vehicleModel",
+        "placeholder": "Enter Vehicle Model"
+      }
+    }
+  },
+  {
+    "id": "lracore:vehicleVINNumber",
+    "name": "Vehicle VIN Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:vehicleVINNumber:'(.*?)'",
+        "field": "lracore:vehicleVINNumber",
+        "placeholder": "Enter Vehicle VIN Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:vehicleEngineNumber",
+    "name": "Vehicle Engine Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "allowUpdateOnChange": false,
+        "hideDefaultAction": true,
+        "pattern": "lracore:vehicleEngineNumber:'(.*?)'",
+        "field": "lracore:vehicleEngineNumber",
+        "placeholder": "Enter Vehicle Engine Number"
+      }
+    }
+  }
+],
+        "highlight": {
+          "prefix": "<span class='aca-highlight'>",
+          "postfix": "</span>",
+          "fields": [
+            {
+              "field": "cm:title"
+            },
+            {
+              "field": "cm:name"
+            },
+            {
+              "field": "cm:description",
+              "snippetCount": 1
+            },
+            {
+              "field": "cm:content",
+              "snippetCount": 1
+            }
+          ]
+        }
+      },
+
+
+      {
+        "id": "app.search.TaxpayerSearch",
+        "order": 200,
+        "name": "Taxpayers",
+        "default": false,
+        "filterWithContains": true,
+        "aca:fields": [
+          "cm:name",
+          "cm:title",
+          "cm:description",
+          "cm:identifier",
+          "cm:contributor",
+          "cm:coverage",
+          "cm:dcsource",
+          "cm:publisher",
+          "cm:rights",
+          "cm:subject",
+          "cm:type",
+          "TEXT",
+          "TAG",
+          "lracore:taxpayerType",
+          "lracore:taxNumber",
+          "lracore:employeeReferenceNumber",
+          "lracore:taxpayerName",
+          "lracore:tradingName",
+          "lracore:legalName",
+          "lracore:customsClientType",
+          "lracore:fileType",
+          "lracore:financialYear",
+          "lracore:financialPeriod",
+          "lracore:documentType",
+          "lracore:companyDirectors",
+          "lracore:VATNumber",
+          "lracore:VIP",
+          "lracore:passportNumber",
+          "lracore:driversLicenseNumber",
+          "lracore:electionNumber",
+          "lracore:IDNumber"
+        ],
+        "include": ["path", "allowableOperations", "properties"],
+        "sorting": {
+          "options": [
+            {
+              "key": "score",
+              "label": "SEARCH.SORT.RELEVANCE",
+              "type": "SCORE",
+              "field": "score",
+              "ascending": false
+            },
+            {
+              "key": "name",
+              "label": "SEARCH.SORT.FILENAME",
+              "type": "FIELD",
+              "field": "cm:name",
+              "ascending": true
+            },
+            {
+              "key": "title",
+              "label": "SEARCH.SORT.TITLE",
+              "type": "FIELD",
+              "field": "cm:title",
+              "ascending": true
+            },
+            {
+              "key": "created",
+              "label": "SEARCH.SORT.CREATE_DATE",
+              "type": "FIELD",
+              "field": "cm:created",
+              "ascending": true
+            }
+          ],
+          "defaults": [
+            {
+              "key": "score",
+              "type": "SCORE",
+              "field": "score",
+              "ascending": false
+            }
+          ]
+        },
+        "aca:triggeredOnChange": false,
+        "resetButton": true,
+        "filterQueries": [
+          {
+            "query": "+TYPE:'cm:folder' OR +TYPE:'cm:content'"
+          },
+          {
+            "query": "-TYPE:'cm:thumbnail' AND -TYPE:'cm:failedThumbnail' AND -TYPE:'cm:rating'"
+          },
+          { "query": "-cm:creator:System" },
+          {
+            "query": "-TYPE:'st:site' AND -ASPECT:'st:siteContainer' AND -ASPECT:'sys:hidden'"
+          },
+          {
+            "query": "-TYPE:'dl:dataList' AND -TYPE:'dl:todoList' AND -TYPE:'dl:issue'"
+          },
+          { "query": "-TYPE:'fm:topic' AND -TYPE:'fm:post'" },
+          { "query": "-TYPE:'lnk:link'" },
+          { "query": "-PATH:'//cm:wiki/*'" }
+        ],
+        "facetFields": {
+          "expanded": true,
+          "fields": [
+            {
+              "mincount": 1,
+              "field": "creator",
+              "label": "SEARCH.FACET_FIELDS.CREATOR",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            },
+            {
+              "mincount": 1,
+              "field": "cm:type",
+              "label": "Type",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            },
+            {
+              "mincount": 1,
+              "field": "cm:publisher",
+              "label": "Publisher",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            },
+            {
+              "mincount": 1,
+              "field": "cm:contributor",
+              "label": "Contributor",
+              "settings": {
+                "allowUpdateOnChange": false,
+                "hideDefaultAction": true
+              }
+            }
+          ]
+        },
+        "categories": [
+  {
+    "id": "lracore:taxpayerType",
+    "name": "Taxpayer Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:taxpayerType:'(.*?)'",
+        "field": "lracore:taxpayerType",
+        "placeholder": "Enter Taxpayer Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:taxNumber",
+    "name": "Tax Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:taxNumber:'(.*?)'",
+        "field": "lracore:taxNumber",
+        "placeholder": "Enter TIN/ETIN Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:employeeReferenceNumber",
+    "name": "Employee Reference Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:employeeReferenceNumber:'(.*?)'",
+        "field": "lracore:employeeReferenceNumber",
+        "placeholder": "Enter Employee Reference Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:taxpayerName",
+    "name": "Taxpayer Name",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:taxpayerName:'(.*?)'",
+        "field": "lracore:taxpayerName",
+        "placeholder": "Enter Taxpayer Name"
+      }
+    }
+  },
+  {
+    "id": "lracore:tradingName",
+    "name": "Trading Name",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:tradingName:'(.*?)'",
+        "field": "lracore:tradingName",
+        "placeholder": "Enter Trading Name"
+      }
+    }
+  },
+  {
+    "id": "lracore:legalName",
+    "name": "Legal Name",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:legalName:'(.*?)'",
+        "field": "lracore:legalName",
+        "placeholder": "Enter Legal Name"
+      }
+    }
+  },
+  {
+    "id": "lracore:customsClientType",
+    "name": "Customs Client Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:customsClientType:'(.*?)'",
+        "field": "lracore:customsClientType",
+        "placeholder": "Enter Customs Client Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:fileType",
+    "name": "File Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:fileType:'(.*?)'",
+        "field": "lracore:fileType",
+        "placeholder": "Enter File Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:financialYear",
+    "name": "Financial Year (CCYY-YY)",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:financialYear:'(.*?)'",
+        "field": "lracore:financialYear",
+        "placeholder": "Enter Financial Year (CCYY-YY)"
+      }
+    }
+  },
+  {
+    "id": "lracore:financialPeriod",
+    "name": "Financial Period",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "date-range",
+      "settings": {
+        "pattern": "lracore:financialPeriod:'(.*?)'",
+        "field": "lracore:financialPeriod",
+        "placeholder": "Enter Financial Period"
+      }
+    }
+  },
+  {
+    "id": "lracore:documentType",
+    "name": "Document Type",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:documentType:'(.*?)'",
+        "field": "lracore:documentType",
+        "placeholder": "Enter Document Type"
+      }
+    }
+  },
+  {
+    "id": "lracore:companyDirectors",
+    "name": "Company Directors",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:companyDirectors:'(.*?)'",
+        "field": "lracore:companyDirectors",
+        "placeholder": "Enter Company Directors"
+      }
+    }
+  },
+  {
+    "id": "lracore:VATNumber",
+    "name": "VAT Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:VATNumber:'(.*?)'",
+        "field": "lracore:VATNumber",
+        "placeholder": "Enter Importance Indicator Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:VIP",
+    "name": "VIP",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:VIP:'(.*?)'",
+        "field": "lracore:VIP",
+        "placeholder": "Enter VIP"
+      }
+    }
+  },
+  {
+    "id": "lracore:passportNumber",
+    "name": "Passport Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:passportNumber:'(.*?)'",
+        "field": "lracore:passportNumber",
+        "placeholder": "Enter Passport Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:driversLicenseNumber",
+    "name": "Driver's License Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:driversLicenseNumber:'(.*?)'",
+        "field": "lracore:driversLicenseNumber",
+        "placeholder": "Enter Driver's License Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:electionNumber",
+    "name": "Election Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:electionNumber:'(.*?)'",
+        "field": "lracore:electionNumber",
+        "placeholder": "Enter Election Number"
+      }
+    }
+  },
+  {
+    "id": "lracore:IDNumber",
+    "name": "ID Number",
+    "enabled": true,
+    "expanded": true,
+    "component": {
+      "selector": "text",
+      "settings": {
+        "pattern": "lracore:IDNumber:'(.*?)'",
+        "field": "lracore:IDNumber",
+        "placeholder": "Enter ID Number"
+      }
+    }
+  }
+],
+        "highlight": {
+          "prefix": "<span class='aca-highlight'>",
+          "postfix": "</span>",
+          "fields": [
+            {
+              "field": "cm:title"
+            },
+            {
+              "field": "cm:name"
+            },
+            {
+              "field": "cm:description",
+              "snippetCount": 1
+            },
+            {
+              "field": "cm:content",
+              "snippetCount": 1
+            }
+          ]
+        }
+      }
+
+     ]
   }
 }

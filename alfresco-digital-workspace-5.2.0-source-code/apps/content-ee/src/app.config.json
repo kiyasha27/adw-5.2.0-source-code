@@ -1,12 +1,12 @@
 {
     "$schema": "../../../node_modules/@alfresco/adf-core/app.config.schema.json",
-    "ecmHost": "http://localhost:8081",
-    "bpmHost": "http://localhost:8080",
+    "ecmHost": "http://localhost:8080",
+    "bpmHost": "",
     "aosHost": "http://localhost:8080/alfresco/aos",
     "baseShareUrl": "http://localhost:8080/#/preview/s",
-    "providers": "ALL",
-    "authType": "OAUTH",
-    "identityHost": "http://localhost:8282/auth/admin/realms/alfresco",
+    "providers": "ECM",
+    "authType": "BASIC",
+    "identityHost": "http://localhost:8080/auth/admin/realms/alfresco",
     "loginRoute": "login",
     "mobileAppSwitch": {
         "enabled" : true
@@ -41,17 +41,13 @@
         "skipIssuerCheck": true,
         "strictDiscoveryDocumentValidation": false
     },
-    "msOnline": {
-        "msHost": "host",
-        "msClientId": "clientId",
-        "msAuthority": "authority",
-        "msRedirectUri": "http://localhost:4200"
-    },
+
+    
     "locale": "en",
     "application": {
         "name": "",
         "version": "2.0.0-M2",
-        "logo": "assets/images/full-logo.png",
+        "logo": "assets/images/rsl-adw-logo.png",
         "copyright": "APP.COPYRIGHT"
     },
     "pagination": {
@@ -1067,12 +1063,24 @@
         ]
         }
     },
+    
     "aspect-visible": {
         "default" : ["cm:generalclassifiable", "cm:complianceable",
                     "cm:dublincore", "cm:effectivity", "cm:summarizable",
                     "cm:versionable", "cm:templatable","cm:emailed", "emailserver:aliasable",
                     "cm:taggable", "app:inlineeditable", "cm:geographic", "exif:exif",
-                    "audio:audio", "cm:indexControl", "dp:restrictable", "smf:customConfigSmartFolder", "smf:systemConfigSmartFolder"],
+                    "audio:audio", "cm:indexControl", "dp:restrictable", "smf:customConfigSmartFolder", "smf:systemConfigSmartFolder",
+                  "lracore:TaxPayerIdentificationAspect",
+                  "lracore:TaxPayerCompanyOrIndividualAspect",
+                  "lracore:TaxPayerEmployeeAspect",
+                  "lracore:FileTypeAspect",
+                  "lracore:VATAspect",
+                  "lracore:FinancialYearAspect",
+                  "lracore:FinancialPeriodAspect",
+                  "lracore:TaxPayerFolderAspect",
+                  "lracore:CustomsDocumentTypeAspect",
+                  "lracore:ExciseTaxReturnTypeAspect",
+                  "lracore:BarcodeAspect"],
         "ai": ["ai:products", "ai:dates", "ai:places", "ai:events", "ai:organizations", "ai:people", "ai:things", "ai:quantities", "ai:creativeWorks", "ai:labels", "ai:textLines"]
     },
     "upload": {

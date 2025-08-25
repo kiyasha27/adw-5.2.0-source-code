@@ -1,18 +1,22 @@
-import { Component, AfterViewInit } from '@angular/core';
+/* import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { SafePipeModule } from './safe.pipe.module';  // Import the pipe module
+import { StorageService } from '@alfresco/adf-core';
+import { AuthenticationService } from '@alfresco/adf-core'; //New
 
 @Component({
   selector: 'lib-custom-viewer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafePipeModule], 
   templateUrl: './custom-viewer.component.html',
   styleUrls: ['./custom-viewer.component.css'],
 })
 export class CustomViewerComponent implements AfterViewInit {
   enterpriseViewerUrl = '';
+  currentUser: string | undefined; //New
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private storageService: StorageService, private authService: AuthenticationService) {
     const url = this.router.url;
     console.log('Router URL:', url);
 
@@ -20,12 +24,19 @@ export class CustomViewerComponent implements AfterViewInit {
     // or additional slash, until we reach a parenthesis or query delimiter
     const regex = /\(viewer:view\/([^)]+)/;
     const match = url.match(regex);
+    this.currentUser = this.authService.getUsername(); // Extracting username
 
     if (match && match[1]) {
       const extractedId = match[1];
       console.log('Extracted ID:', extractedId);
-      this.enterpriseViewerUrl = `http://192.168.82.62:8080/OpenAnnotate/viewer.htm?docId=workspace://SpacesStore/${extractedId}`;
-      window.open(this.enterpriseViewerUrl, '_blank');
+
+      // Storing user ticket
+      const ecmTicket = this.storageService.getItem('ticket-ECM');
+      console.log('ECM Ticket:', ecmTicket);
+
+      // Generates the AEV URL to navigate to
+      this.enterpriseViewerUrl = `http://localhost:8080/OpenAnnotate/login/external.htm?username=${this.currentUser}&ticket=${ecmTicket}&docId=workspace://SpacesStore/${extractedId}`;
+      console.log(this.enterpriseViewerUrl);
       
       console.log("Constructed URL:", this.enterpriseViewerUrl);
     } else {
@@ -43,42 +54,8 @@ export class CustomViewerComponent implements AfterViewInit {
       console.error('Iframe not found');
     }
   }
-}
 
-
-/* OLD CODE:
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-
-@Component({
-  selector: 'lib-custom-viewer',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './custom-viewer.component.html',
-  styleUrls: ['./custom-viewer.component.css'],
-})
-export class CustomViewerComponent {
-  enterpriseViewerUrl = '';
-  constructor(private router:Router){
-    const url = this.router.url;
-
-// This regex looks for "(viewer:view/" followed by any characters that are not a closing parenthesis
-// or additional slash, until we reach a parenthesis or query delimiter
-const regex = /\(viewer:view\/([^)]+)/;
-const match = url.match(regex);
-
-if (match && match[1]) {
-  const extractedId = match[1];
-  console.log('Extracted ID:', extractedId);
-  const enterpriseViewerUrl = `http://192.168.82.62:8080/OpenAnnotate/viewer.htm?docId=workspace://SpacesStore/${extractedId}`;
   
-  //this.enterpriseViewerUrl = `http://192.168.82.62:8080/OpenAnnotate/viewer.htm?docId=workspace://SpacesStore/${extractedId}`;
-     window.open(enterpriseViewerUrl, '_blank');
-     console.log("URL", this.enterpriseViewerUrl);
-} else {
-  console.error('No match found');
 }
-    
-  }
-}*/
+
+ */

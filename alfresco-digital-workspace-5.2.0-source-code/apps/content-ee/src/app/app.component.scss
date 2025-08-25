@@ -12,6 +12,7 @@ app-root {
         clip: rect(0, 0, 0, 0);
         border: 0;
     }
+    /* This add CSS allows the AEV to take up the entire space and not be confined to a small block */
     .adf-viewer-render-layout-content>div {
         display: flow;
         /* flex-flow: row wrap; */
@@ -20,7 +21,7 @@ app-root {
         height: 93vh;
        
     }
-    
+    /* This add CSS allows the AEV to take up the entire space and not be confined to a small block */
     .adf-viewer-render-layout-content {
         overflow: hidden;
         z-index: 1;

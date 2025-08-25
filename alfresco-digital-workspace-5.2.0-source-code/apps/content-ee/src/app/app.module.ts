@@ -39,6 +39,23 @@ import { ShellModule, SHELL_APP_SERVICE, SHELL_AUTH_TOKEN } from '@alfresco/adf-
 import { ContentUrlService, CONTENT_LAYOUT_ROUTES, ContentServiceExtensionModule, CoreExtensionsModule } from '@alfresco/aca-content';
 import { APP_ROUTES } from './app.routes';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
+import { HashLocationStrategy, LocationStrategy  } from '@angular/common'; 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+//import { Sad500FormDialogComponent } from './services/sad500-form-dialog.component';
+
 
 registerLocaleData(localeFr);
 registerLocaleData(localeDe);
@@ -58,8 +75,25 @@ registerLocaleData(localeDa);
 registerLocaleData(localeSv);
 
 @NgModule({
+    
     imports: [
+        
+            MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    
         AuthModule.forRoot({ useHash: true }),
+        MatPaginatorModule,  // Add MatPaginatorModule here
+        MatExpansionModule, // Add this
+        MatSidenavModule,
+        MatToolbarModule,
+        MatMenuModule,
+        MatIconModule,
+        MatDividerModule,
+        MatListModule,
+        MatCardModule,
+        MatTableModule,
         BrowserModule,
         TranslateModule.forRoot(),
         CoreModule.forRoot(),
@@ -76,6 +110,7 @@ registerLocaleData(localeSv);
         })],
     providers: [
         { provide: ContentVersionService, useClass: ContentUrlService },
+        {provide : LocationStrategy , useClass: HashLocationStrategy},
         {
             provide: SHELL_APP_SERVICE,
             useClass: AppService
@@ -86,6 +121,9 @@ registerLocaleData(localeSv);
         },
         provideTranslations('app', 'assets')
     ],
+    exports: [
+    
+  ],
     declarations: [AppComponent],
     bootstrap: [AppComponent]
 })

@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExtensionService, provideExtensionConfig } from '@alfresco/adf-extensions';
-import { CustomViewerComponent } from './viewer/custom-viewer/custom-viewer.component';
 import { HelloComponent } from './pages/hello/hello.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
+  
   imports: [
     CommonModule,
-    CustomViewerComponent
+    MatSnackBarModule
+   // CustomViewerComponent
   ],
   providers: [
     // Provide your extension descriptor JSON
@@ -17,8 +19,8 @@ import { HelloComponent } from './pages/hello/hello.component';
 export class MyExtensionModule {
   constructor(extension: ExtensionService) {
     extension.setComponents({
-      'my-org.components.custom-viewer': CustomViewerComponent,
+      //'my-org.components.custom-viewer': CustomViewerComponent,
       'my-extension-id.pages.hello.page':HelloComponent
     });
-  }
+  } 
 }

@@ -1,196 +1,246 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <!-- Font Awesome CSS for icons in the document, sites and activities cards -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
-    
 
-    <div class="card-row0">
-        <div class="card">
-            <!-- Card Header: Title and Count of Sites -->
-            <div class="card-header">
-                <h2 class="card-title">My Libraries ({{ sites.length }})</h2>
-            </div>
-            <div class="card-body">
-                <!-- Table Container for Sites -->
-                <div class="sites-table-container">
-                    <table class="sites-table">
-                        <tbody>
-                            <tr>
-                                <th>Name</th>
-                            </tr>
-                            <!-- Loop through each site -->
-                            <tr *ngFor="let site of sites">
-                                <td>
-                                    <i class="fas fa-globe site-icon"></i>
-                                    {{ site.title }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Font Awesome CSS for icons in the document, sites and activities cards -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     
-    <div class="card-row1">
-        <div class="card-tasks1-1">
-            <!-- Card Header: Title and Count of Documents -->
-            <div class="card-header-tasks1-1">
-                <h2 class="card-title-tasks1-1">My Recent Documents ({{ documents.length }})</h2>
-            </div>
-            <!-- Table Container for Documents -->
-            <div class="documents-table-container">
-                <table class="documents-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Created At</th>
-                            <th>Modified At</th>
-                        </tr>
-                    </thead>
+<div class="container">
+    <nav>
+      <div class="title-headers"> My Libraries [{{ sites.length }}] </div>
+        <!-- Table Container for Sites -->
+        <div class="sites-table-container">
+            <table class="sites-table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        
+                    </tr>
+                    <!-- Loop through each site -->
+                    <tr *ngFor="let site of sites">
+                        <td>
+                            <i class="fas fa-globe site-icon"></i>
+                            {{ site.title }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </nav>
+    <main>
+       <div class="title-headers"> My Recent Documents [{{ documents.length }}]</div>
+        <!-- Table Container for Documents -->
+        <div class="documents-table-container">
+            <table class="documents-table">
+                
+                    <tr>
+                        <th>Name</th>
+                        <th>Created At</th>
+                        <th>Modified At</th>
+                    </tr>
+               
                     <tbody>
-                        <tr *ngFor="let doc of documents; let i = index">
-                            <td>
-                                <i class="file-icon" [ngClass]="getIconClass(doc.content.mimeTypeName)"></i>
-                                <!-- Clicking the link will open the file in a new tab -->
-                                <a [href]="getDocumentUrl(doc.id)" target="_blank" class="doc-link" title="Click here to open file.">
-                                    {{ doc.name }}
-                                </a>
-                            </td>
-                            <td>{{ doc.createdAt | date: 'short' }}</td>
-                            <td>{{ doc.modifiedAt | date: 'short' }}</td>
-                        </tr>
-                    </tbody>
-                    
-                </table>
-            </div>
-            <!-- Message if no documents found -->
-            <p *ngIf="documents?.length === 0">
-                No documents found.
-            </p>
+                        
+                    <tr *ngFor="let doc of documents; let i = index">
+                        
+                        <td>
+                            <i class="file-icon" [ngClass]="getIconClass(doc.content.mimeTypeName)"></i>
+                            <!-- Clicking the link will open the file in a new tab --> 
+                             <a (click)="getDocumentUrl(doc.id)" target="_blank" class="doc-link" title="Click here to open file.">
+                                {{ doc.name }}
+                            </a>
+                        </td>
+                        <td>{{ doc.createdAt | date: 'short' }}</td>
+                        <td>{{ doc.modifiedAt | date: 'short' }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-
-    <div class="card-row2">
-        <!-- Card: My Tasks -->
-        <div class="card-tasks2">
-<div class="card-header-activities">
-            <h2 class="card-title-activities">My Activities</h2>
-        </div>
-        <div class="activities-container">
-            <!-- Loop through each activity -->
-            <div *ngFor="let activity of activities" class="activity-item">
-                <hr>
-                <p>{{ activity.postedAt | date: 'short' }}</p>
-                <p>{{ activity.feedPersonId }} {{ activity.activityTypeDescription }} <i class="fas fa-file activities-file-icon"></i> {{ activity.activitySummary.title }} in site <i class="fas fa-globe activities-site-icon"></i> {{ activity.siteId }} <br><br><em>{{ activity.timeAgo }}</em></p>
-            </div>
-        </div>
-        </div>
-    
-        
-        <!-- Card: Queued Tasks -->
-        <div class="card-tasks2">
-            <div class="card-header-tasks2">
-                <h2 class="card-title-tasks2">Queued Tasks</h2>
-                <div class="number-block">{{ myQueuedTasks.length }}</div>
-            </div>
-            <!-- Table Container for Tasks -->
-            <div class="tasks-table-container">
-                <table class="tasks-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Task Name</th>
-                            <th>Created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Loop through each task -->
-                        <tr *ngFor="let task of myQueuedTasks">
-                            <td>{{ task.id }}</td>
-                            <td>{{ task.name }}</td>
-                            <td>{{ task.created | date:'short' }}</td>
-                        </tr>
-                        <!-- Message if no tasks found -->
-                        <tr *ngIf="myQueuedTasks.length === 0">
-                            <td>No tasks were found</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    
-        
-        <!-- Card: Completed Tasks -->
-        <div class="card-tasks2">
-            <div class="card-header-tasks2">
-                <h2 class="card-title-tasks2">Completed Tasks</h2>
-                <div class="number-block">{{ myCompletedTasks.length }}</div>
-            </div>
-            <!-- Table Container for Tasks -->
-            <div class="tasks-table-container">
-                <table class="tasks-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Task Name</th>
-                            <th>Completed</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Loop through each task -->
-                        <tr *ngFor="let task of myCompletedTasks">
-                            <td>{{ task.id }}</td>
-                            <td>{{ task.name }}</td>
-                            <td>{{ task.endDate | date:'short' }}</td>
-                        </tr>
-                        <!-- Message if no tasks found -->
-                        <tr *ngIf="myCompletedTasks.length === 0">
-                            <td>No tasks found</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    
-
-    <!-- Card: My Activities -->
-    
-    <div class="card-activities">
-                    <!-- Card Header: Title and Count of My Tasks -->
-                    <div class="card-header-tasks2">
-                        <h2 class="card-title-tasks2">My Tasks</h2>
-                        <div class="number-block">{{ myTasks.length }}</div>
-                    </div>
-                    <!-- Table Container for Tasks -->
-                    <div class="tasks-table-container">
-                        <table class="tasks-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Task Name</th>
-                                    <th>Created</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Loop through each task -->
-                                <tr *ngFor="let task of myTasks" (click)="openTask(task.id)" title="Click here to launch task">
-                                    <td>{{ task.id }}</td>
-                                    <td>{{ task.name }}</td>
-                                    <td>{{ task.created | date:'short' }}</td>
-                                </tr>
-                                <!-- Message if no tasks found -->
-                                <tr *ngIf="myTasks.length === 0">
-                                    <td>No tasks found</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-     </div>
+        <!-- Message if no documents found -->
+        <p *ngIf="documents?.length === 0">
+            No documents found.
+        </p>
+    </main>
+    <div id="sidebar">
+        <div class="title-headers"> My Tasks [{{ myTasks.length }}]</div>
      
+        <!-- Table Container for Tasks -->
+        <div class="tasks-table-container">
+            <table class="tasks-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Task Name</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through each task -->
+                    <tr *ngFor="let task of myTasks" (click)="openTask(task.id)" title="Click here to launch task">
+                        <td>{{ task.id }}</td>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.created | date:'short' }}</td>
+                    </tr>
+                    <!-- Message if no tasks found -->
+                    <tr *ngIf="myTasks.length === 0">
+                        <td colspan="3">No tasks found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <div id="content1">
+        <div class="title-headers"> My Activities </div>
+        <div class="activities-container">
+          <!-- Loop through each activity -->
+          <div *ngFor="let activity of activityList" class="activity-item">
+            <hr>
+            <p>{{ activity.postedAt | date: 'short' }}</p>
+            <p>
+              <!-- Display the feedPersonId and description based on activityType -->
+              {{ activity.postPersonId }} 
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-added'">
+                added file
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-deleted'">
+                deleted file
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-previewed'">
+                previewed file
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.folder-added'">
+                added folder
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-downloaded'">
+                downloaded file
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.user-left'">
+                removed
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.user-joined'">
+                added user
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.folder-deleted'">
+                deleted folder
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.group-removed'">
+                removed group
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.user-role-changed'">
+                changed role of
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.folders-added'">
+                added folders
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.group-added'">
+                added group
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-updated'">
+                updated file
+              </ng-container>
+              
+              <!-- Display icons after activityType -->
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-added'">
+                <i class="fas fa-plus-circle activities-icon"></i> <!-- Icon for file added -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-deleted'">
+                <i class="fas fa-trash-alt activities-icon"></i> <!-- Icon for file deleted -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-previewed'">
+                <i class="fas fa-eye activities-icon"></i> <!-- Icon for file previewed -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.folder-added'">
+                <i class="fas fa-folder activities-icon"></i> <!-- Icon for folder added -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-downloaded'">
+                <i class="fas fa-download activities-icon"></i> <!-- Icon for file downloaded -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.user-left'">
+                <i class="fas fa-sign-out-alt activities-icon"></i> <!-- Icon for user left -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.user-joined'">
+                <i class="fas fa-user-plus activities-icon"></i> <!-- Icon for user joined -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.folder-deleted'">
+                <i class="fas fa-folder-minus activities-icon"></i> <!-- Icon for folder deleted -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.group-removed'">
+                <i class="fas fa-user-times activities-icon"></i> <!-- Icon for group removed -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.user-role-changed'">
+                <i class="fas fa-user-cog activities-icon"></i> <!-- Icon for user role changed -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.folders-added'">
+                <i class="fas fa-folder-open activities-icon"></i> <!-- Icon for folders added -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.site.group-added'">
+                <i class="fas fa-users activities-icon"></i> <!-- Icon for group added -->
+              </ng-container>
+              <ng-container *ngIf="activity.activityType === 'org.alfresco.documentlibrary.file-updated'">
+                <i class="fas fa-edit activities-icon"></i> <!-- Icon for file updated -->
+              </ng-container>
+      
+              {{activity.activitySummary.memberPersonId }} 
+              {{activity.activitySummary.title }} in site 
+              <i class="fas fa-globe activities-site-icon"></i> {{ activity.siteId }}
+              <br><br>
+              <em>{{ activity.timeAgo }}</em>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+    <div id="content2">
+        <div class="title-headers"> Queued Tasks [{{ myQueuedTasks.length }}]</div>
     
-</body>
-</html>
+        <!-- Table Container for Tasks -->
+        <div class="tasks-table-container">
+            <table class="tasks-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Task Name</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through each task -->
+                    <tr *ngFor="let task of myQueuedTasks">
+                        <td>{{ task.id }}</td>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.created | date:'short' }}</td>
+                    </tr>
+                    <!-- Message if no tasks found -->
+                    <tr *ngIf="myQueuedTasks.length === 0">
+                        <td colspan="3">No tasks found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="content3">
+        <div class="title-headers"> Completed Tasks [{{ myCompletedTasks.length }}]</div>
+      <!-- <div class="task-count-block">{{ myCompletedTasks.length }}</div> -->
+        <!-- Table Container for Tasks -->
+        <div class="tasks-table-container">
+            <table class="tasks-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Task Name</th>
+                        <th>Completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through each task -->
+                    <tr *ngFor="let task of myCompletedTasks">
+                        <td>{{ task.id }}</td>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.endDate | date:'short' }}</td>
+                    </tr>
+                    <!-- Message if no tasks found -->
+                    <tr *ngIf="myCompletedTasks.length === 0">
+                        <td colspan="3">No tasks found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

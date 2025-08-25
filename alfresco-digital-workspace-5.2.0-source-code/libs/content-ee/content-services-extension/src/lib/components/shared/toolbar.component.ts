@@ -45,4 +45,9 @@ export abstract class ToolbarComponent implements OnInit, OnDestroy {
     trackByActionId(_: number, action: ContentActionRef) {
         return action.id;
     }
+
+  onActionClick(action: any) {
+    console.log('Action executed:', action);
+    // later you can trigger your Alfresco action here
+  }
 }

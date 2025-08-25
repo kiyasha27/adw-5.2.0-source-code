@@ -139,6 +139,11 @@
     ],
 
     "actions": [
+         {
+            "id": "app.actions.navigateDashboard",
+            "type": "NAVIGATE_URL",
+            "payload": "/my-page"
+        },
         {
             "id": "manage-security-mark.actions.execute",
             "type": "MANAGE_SECURITY_MARK",
@@ -299,7 +304,8 @@
                         "rules": {
                             "visible": "app.context.canViewPermissionNonRecord"
                         }
-                    }
+                    }          
+
                 ]
             }
         ],

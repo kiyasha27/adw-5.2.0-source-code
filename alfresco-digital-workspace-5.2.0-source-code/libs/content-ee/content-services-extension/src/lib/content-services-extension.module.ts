@@ -6,6 +6,11 @@
  * agreement is prohibited.
  */
 
+import { CommonModule } from '@angular/common';
+//import { CustomToolbarComponent } from './components/custom-toolbar/custom-toolbar.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { NgModule } from '@angular/core';
 import { AuthGuard, TRANSLATION_PROVIDER, AppConfigService } from '@alfresco/adf-core';
 import { ExtensionService, provideExtensionConfig } from '@alfresco/adf-extensions';
@@ -30,7 +35,11 @@ export const effects = [ExtensionEffects];
         EffectsModule.forFeature(effects),
         ...LIBRARY_MANAGEMENT_DIRECTIVES,
         DataTableDirective,
-        MembershipRequestsNotificationsComponent
+        MembershipRequestsNotificationsComponent,
+        CommonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule
     ],
     providers: [
         {
@@ -45,6 +54,7 @@ export const effects = [ExtensionEffects];
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { floatLabel: 'never' } },
     ],
 })
+
 export class ContentServicesExtensionModule {
     constructor(extensions: ExtensionService, private appConfigService: AppConfigService) {
         extensions.setComponents({
