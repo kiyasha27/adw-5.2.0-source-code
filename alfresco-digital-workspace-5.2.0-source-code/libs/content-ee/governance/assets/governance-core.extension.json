@@ -144,7 +144,10 @@
             "type": "NAVIGATE_URL",
             "payload": "/my-page"
         },
+        
+
         {
+            
             "id": "manage-security-mark.actions.execute",
             "type": "MANAGE_SECURITY_MARK",
             "payload": "$(context.selection.first.entry)"

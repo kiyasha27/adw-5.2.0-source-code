@@ -1,1 +1,29 @@
-<h2>This is my sad500 form</h2>
+<mat-card class="form-card">
+  <mat-card-title>Update SAD500 Data</mat-card-title>
+  <mat-card-content>
+    <form>
+      <div class="form-section">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>SAD500 Type</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" name="category">
+            <mat-option value="Vehicle">Vehicle</mat-option>
+            <mat-option value="GoodsServices">Goods and Services</mat-option>
+            
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Date Submitted</mat-label>
+          <input matInput [matDatepicker]="picker" placeholder="DD/MM/YYYY" [(ngModel)]="submittedDate" name="date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-raised-button color="primary">Save Changes</button>
+    <button mat-button color="warn">Cancel</button>
+  </mat-card-actions>
+</mat-card>
