@@ -144,6 +144,11 @@
             "type": "NAVIGATE_URL",
             "payload": "/my-page"
         },
+         {
+            "id": "app.actions.update-taxnumber",
+            "type": "NAVIGATE_URL",
+            "payload": "/update-taxnumber"
+        },
         
 
         {

@@ -14,42 +14,59 @@
       "layout": "app.layout.main",
       "component": "my-extension-id.pages.hello.page",
       "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+        {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "update-taxnumber",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.hello.update-taxnumber.update-taxnumber.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
     }
   ],
 
   "features": {
 
-    "toolbar": [
-      {
-        "id": "app.toolbar.more",
-        "type": "menu",
-        "order": 10000,
-        "icon": "more_vert",
-        "title": "APP.ACTIONS.MORE",
-        "children": [
-          {
-            "id": "app.toolbar.toggleLock",
-            "order": 110,
-            "rules": {
-              "visible": ["app.context.canToggleLockNonRecord"]
-            }
+            "viewer": {
+            "toolbarActions": [
+                {
+                    "id": "app.viewer.share",
+                    "rules": {
+                        "visible": "app.record.canShareRecord"
+                    }
+                },
+                {
+                    "id": "app.viewer.toolbar.more",
+                    "children": [
+                                 {
+                                    "id": "app.toolbar.dashboard",
+                                    "title": "Update SAD500 Data",
+                                    "icon": "edit",
+                                    "order": 1500,
+                                    "actions": {
+                                      "click": "app.actions.navigateDashboard"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                                                 {
+                                    "id": "app.toolbar.dashboard",
+                                    "title": "Update TIN/ETIN",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.update-taxnumber"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                }
+                    ]
+                }
+            ]
           },
-         {
-              "id": "app.toolbar.dashboard",
-              "title": "Update SAD500 Data",
-              "icon": "edit",
-              "order": 1500,
-              "actions": {
-                "click": "app.actions.navigateDashboard"
-              },
-              "rules": {
-                "visible": "app.selection.file"
-              }
-          }
-
-        ]
-      }
-    ],
+          
      "search": [
       {
         "id": "app.search.CustomsSearch",
