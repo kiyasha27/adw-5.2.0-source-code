@@ -21,8 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
-  selector: 'lib-update-taxnumber',
-  templateUrl: './update-taxnumber.component.html',
+  selector: 'lib-update-taxnumber-action',
+  templateUrl: './update-taxnumber-action.component.html',
   imports: [
     FormsModule,
     MatCardModule,
@@ -35,7 +35,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ReactiveFormsModule
   ],
 
-  styleUrls: ['./update-taxnumber.component.css'],
+  styleUrls: ['./update-taxnumber-action.component.css'],
   standalone: true
 })
 export class TaxNumberComponent {

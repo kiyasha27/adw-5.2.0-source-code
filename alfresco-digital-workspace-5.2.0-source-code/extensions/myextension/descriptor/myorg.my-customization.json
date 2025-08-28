@@ -7,22 +7,71 @@
   "$description": "Just a hello world",
 
   "routes": [
-    {
-      "id": "app.route.my-unique-route-id",
-      "parentRoute": "",
-      "path": "my-page",
-      "layout": "app.layout.main",
-      "component": "my-extension-id.pages.hello.page",
-      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
-    },
         {
       "id": "app.route.my-unique-route-id",
       "parentRoute": "",
       "path": "update-taxnumber",
       "layout": "app.layout.main",
-      "component": "my-extension-id.pages.hello.update-taxnumber.update-taxnumber.page",
+      "component": "my-extension-id.pages.action.update-taxnumber.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+            {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "update-taxpayer-data",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.update-taxpayer-data.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+        {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "update-sad500",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.update-sad500.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+        {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "update-main-taxpayer-data",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.update-main-taxpayer-data.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+     {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "update-document-data",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.update-document-data.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+         {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "run-script",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.run-script.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+             {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "place-in-file",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.place-in-file.page",
+      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+    },
+             {
+      "id": "app.route.my-unique-route-id",
+      "parentRoute": "",
+      "path": "request-physical-file",
+      "layout": "app.layout.main",
+      "component": "my-extension-id.pages.action.request-physical-file.page",
       "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
     }
+    
   ],
 
   "features": {
@@ -38,25 +87,98 @@
                 {
                     "id": "app.viewer.toolbar.more",
                     "children": [
+
                                  {
-                                    "id": "app.toolbar.dashboard",
-                                    "title": "Update SAD500 Data",
-                                    "icon": "edit",
-                                    "order": 1500,
-                                    "actions": {
-                                      "click": "app.actions.navigateDashboard"
-                                    },
-                                    "rules": {
-                                      "visible": "app.selection.file"
-                                    }
-                                },
-                                                                 {
-                                    "id": "app.toolbar.dashboard",
+                                    "id": "app.toolbar.taxnumber",
                                     "title": "Update TIN/ETIN",
                                     "icon": "edit",
                                     "order": 1600,
                                     "actions": {
                                       "click": "app.actions.update-taxnumber"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                                                {
+                                    "id": "app.toolbar.taxpayer-data",
+                                    "title": "Update Taxpayer Data",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.update-taxpayer-data"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                                               {
+                                    "id": "app.toolbar.sad500",
+                                    "title": "Update SAD500",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.update-sad500"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                                              {
+                                    "id": "app.toolbar.update-main-taxpayer-data",
+                                    "title": "Update Main Taxpayer Data",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.update-main-taxpayer-data"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                 {
+                                    "id": "app.toolbar.update-document-data",
+                                    "title": "Update Document Data",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.update-document-data"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                {
+                                    "id": "app.toolbar.run-script",
+                                    "title": "Run Script",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.run-script"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                {
+                                    "id": "app.toolbar.place-in-file",
+                                    "title": "Place In File",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.place-in-file"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                },
+                                {
+                                    "id": "app.toolbar.request-physical-file",
+                                    "title": "Request Physical File",
+                                    "icon": "edit",
+                                    "order": 1600,
+                                    "actions": {
+                                      "click": "app.actions.request-physical-file"
                                     },
                                     "rules": {
                                       "visible": "app.selection.file"
