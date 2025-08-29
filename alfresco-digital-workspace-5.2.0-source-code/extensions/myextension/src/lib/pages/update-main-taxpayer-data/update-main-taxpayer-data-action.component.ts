@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 
 //import { nodeHasProperty } from '../../core/rules/node.evaluator';
@@ -39,50 +40,76 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: true
 })
 export class MainTaxpayerDataComponent {
-  selectedCategory: any;
-  submittedDate: any;
-  form!: FormGroup;
+form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar) {}
+  constructor(
+    private fb: FormBuilder,
+    private nodeApi: NodesApiService,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
 
-ngOnInit() {
-  this.form = this.fb.group({
-    sad500Type: ['', Validators.required],
-    dateSubmitted: [null, Validators.required]
-  });
-}
+  ngOnInit() {
+    this.form = this.fb.group({
+      taxpayerType: ['', Validators.required],
+      fileType: ['', Validators.required],
+      documentType: ['', Validators.required],
+      financialYear: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}$/)]],
+      dateSubmitted: [null, Validators.required]
+    });
+  }
+
+
 
   updateMetadata() {
-    const nodeId = '4ce06f90-95be-46f3-a06f-9095be36f358';
+    const nodeId = '283f72c5-3f76-408e-bf72-c53f76a08e6e';
     const updatedProps = {
-      'lracore:sad500Type': this.selectedCategory,
-      'lracore:dateSubmitted': this.submittedDate?.toISOString()
+      'lracore:taxpayerType': this.form.value.taxpayerType,
+      'lracore:fileType': this.form.value.fileType,
+      'lracore:documentType': this.form.value.documentType,
+      'lracore:financialYear': this.form.value.financialYear,
     };
 
     this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
       next: (response: any) => {
         console.log('Node updated successfully:', response);
+        this.snackBar.open('Main taxpayer data updated ✅', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['save-snackbar']
+        });
       },
       error: (err) => {
         console.error('Error updating node:', err);
+        this.snackBar.open('Failed to update taxpayer data ❌', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        });
       }
     });
   }
 
-saveChanges() {
+  saveChanges() {
+     if (this.form.get('financialYear')?.invalid) {
+    this.snackBar.open('Financial year is incorrect. Expected format is CCYY-YY', 'Close', {
+      duration: 3000,
+      panelClass: ['error-snackbar'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    return;
+  }
 
-  this.selectedCategory = this.form.value.sad500Type;
-  this.submittedDate = this.form.value.dateSubmitted;
-  this.updateMetadata();
 
-  this.snackBar.open('Changes saved successfully ✅', 'Close', {
-    duration: 3000,
-    horizontalPosition: 'right',
-    verticalPosition: 'top',
-    panelClass: ['save-snackbar']
-    
-  });
+    this.updateMetadata();
+  }
 
+  cancel() {
+    this.router.navigate(['/personal-files']);
+  }
 }
 
-}
+
