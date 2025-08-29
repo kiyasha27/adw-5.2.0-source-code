@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-//import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -8,17 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { NodesApiService } from '@alfresco/adf-content-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
+//import { NodesApiService } from '@alfresco/adf-content-services';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
-//import { nodeHasProperty } from '../../core/rules/node.evaluator';
-//import { NodeEntry, NodePaging, Node } from '@alfresco/js-api';
-
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-run-script',
@@ -34,55 +25,45 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatButtonModule,
     ReactiveFormsModule
   ],
-
   styleUrls: ['./run-script-action.component.css'],
   standalone: true
 })
+
 export class RunScriptComponent {
-  selectedCategory: any;
-  submittedDate: any;
   form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar) {}
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private router: Router) {}
 
-ngOnInit() {
-  this.form = this.fb.group({
-    sad500Type: ['', Validators.required],
-    dateSubmitted: [null, Validators.required]
-  });
-}
-
-  updateMetadata() {
-    const nodeId = '4ce06f90-95be-46f3-a06f-9095be36f358';
-    const updatedProps = {
-      'lracore:sad500Type': this.selectedCategory,
-      'lracore:dateSubmitted': this.submittedDate?.toISOString()
-    };
-
-    this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
-      next: (response: any) => {
-        console.log('Node updated successfully:', response);
-      },
-      error: (err) => {
-        console.error('Error updating node:', err);
-      }
+  ngOnInit() {
+    this.form = this.fb.group({
+      scriptPath: ['', Validators.required],
+      commitLimit: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
   }
 
-saveChanges() {
+  saveChanges() {
+    if (this.form.invalid) {
+      this.snackBar.open('Please fill in all required fields correctly ❗', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
-  this.selectedCategory = this.form.value.sad500Type;
-  this.submittedDate = this.form.value.dateSubmitted;
-  this.updateMetadata();
+    const { scriptPath, commitLimit } = this.form.value;
+    console.log('Script Path:', scriptPath);
+    console.log('Commit Limit:', commitLimit);
+this.snackBar.open('Script parameters saved ✅', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: ['save-snackbar']
+    });
+  }
 
-  this.snackBar.open('Changes saved successfully ✅', 'Close', {
-    duration: 3000,
-    horizontalPosition: 'right',
-    verticalPosition: 'top',
-    panelClass: ['save-snackbar']
-    
-  });
-
-}
-
+  cancel() {
+    this.router.navigate(['/personal-files']);
+  }
 }

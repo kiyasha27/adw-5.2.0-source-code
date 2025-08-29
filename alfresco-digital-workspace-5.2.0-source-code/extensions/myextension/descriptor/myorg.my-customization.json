@@ -29,9 +29,9 @@
       "path": "update-sad500",
       "layout": "app.layout.main",
       "component": "my-extension-id.pages.action.update-sad500.page",
-      "auth": ["content-services.auth", "extension-data-loader-guard.auth"]
+      "auth": ["content-services.auth"]
     },
-        {
+            {
       "id": "app.route.my-unique-route-id",
       "parentRoute": "",
       "path": "update-main-taxpayer-data",
@@ -76,6 +76,29 @@
 
   "features": {
 
+     "toolbar": [
+       {
+                "id": "app.toolbar.more",
+                "type": "menu",
+                "order": 10000,
+                "icon": "more_vert",
+                "title": "APP.ACTIONS.MORE",
+                "children": [
+                                         {
+                                    "id": "app.toolbar.sad500",
+                                    "title": "Update SAD500",
+                                    "icon": "edit",
+                                    "order": 1800,
+                                    "actions": {
+                                      "click": "app.actions.update-sad500"
+                                    },
+                                    "rules": {
+                                      "visible": "app.selection.file"
+                                    }
+                                }
+                ]
+              }
+     ],
             "viewer": {
             "toolbarActions": [
                 {
@@ -104,7 +127,7 @@
                                     "id": "app.toolbar.taxpayer-data",
                                     "title": "Update Taxpayer Data",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 1700,
                                     "actions": {
                                       "click": "app.actions.update-taxpayer-data"
                                     },
@@ -116,7 +139,7 @@
                                     "id": "app.toolbar.sad500",
                                     "title": "Update SAD500",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 1800,
                                     "actions": {
                                       "click": "app.actions.update-sad500"
                                     },
@@ -128,7 +151,7 @@
                                     "id": "app.toolbar.update-main-taxpayer-data",
                                     "title": "Update Main Taxpayer Data",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 1900,
                                     "actions": {
                                       "click": "app.actions.update-main-taxpayer-data"
                                     },
@@ -140,7 +163,7 @@
                                     "id": "app.toolbar.update-document-data",
                                     "title": "Update Document Data",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 2000,
                                     "actions": {
                                       "click": "app.actions.update-document-data"
                                     },
@@ -152,7 +175,7 @@
                                     "id": "app.toolbar.run-script",
                                     "title": "Run Script",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 2100,
                                     "actions": {
                                       "click": "app.actions.run-script"
                                     },
@@ -164,7 +187,7 @@
                                     "id": "app.toolbar.place-in-file",
                                     "title": "Place In File",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 2200,
                                     "actions": {
                                       "click": "app.actions.place-in-file"
                                     },
@@ -176,7 +199,7 @@
                                     "id": "app.toolbar.request-physical-file",
                                     "title": "Request Physical File",
                                     "icon": "edit",
-                                    "order": 1600,
+                                    "order": 2300,
                                     "actions": {
                                       "click": "app.actions.request-physical-file"
                                     },

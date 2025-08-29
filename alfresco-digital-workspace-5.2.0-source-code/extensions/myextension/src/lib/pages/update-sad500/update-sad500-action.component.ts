@@ -13,11 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
-//import { nodeHasProperty } from '../../core/rules/node.evaluator';
-//import { NodeEntry, NodePaging, Node } from '@alfresco/js-api';
-
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -43,14 +39,16 @@ export class Sad500Component {
   submittedDate: any;
   form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar) {}
+constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router) {}
 
 ngOnInit() {
   this.form = this.fb.group({
     sad500Type: ['', Validators.required],
     dateSubmitted: [null, Validators.required]
   });
+  
 }
+
 
   updateMetadata() {
     const nodeId = '4ce06f90-95be-46f3-a06f-9095be36f358';
@@ -83,6 +81,10 @@ saveChanges() {
     
   });
 
+}
+
+cancel() {
+  this.router.navigate(['/personal-files']);
 }
 
 }

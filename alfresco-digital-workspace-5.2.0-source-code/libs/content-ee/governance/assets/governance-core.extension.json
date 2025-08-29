@@ -149,11 +149,11 @@
             "type": "NAVIGATE_URL",
             "payload": "/update-taxpayer-data"
         },
-                 {
-            "id": "app.actions.update-sad500",
-            "type": "NAVIGATE_URL",
-            "payload": "/update-sad500"
-        },
+{
+  "id": "app.actions.update-sad500",
+  "type": "NAVIGATE_URL",
+  "payload": "/update-sad500"
+},
                 {
             "id": "app.actions.update-main-taxpayer-data",
             "type": "NAVIGATE_URL",
@@ -213,6 +213,7 @@
 
     "features": {
         "toolbar": [
+
             {
                 "id": "app.toolbar.share",
                 "rules": {

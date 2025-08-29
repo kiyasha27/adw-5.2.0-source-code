@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 
 //import { nodeHasProperty } from '../../core/rules/node.evaluator';
@@ -39,24 +40,32 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: true
 })
 export class TaxNumberComponent {
-  selectedCategory: any;
-  submittedDate: any;
   form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar) {}
+  constructor(
+    private fb: FormBuilder,
+    private nodeApi: NodesApiService,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
 
-ngOnInit() {
+  ngOnInit() {
+
   this.form = this.fb.group({
-    sad500Type: ['', Validators.required],
-    dateSubmitted: [null, Validators.required]
-  });
-}
+  tin: [''],
+  etin: ['', [Validators.required,Validators.pattern(/^\d{5,9}-\d{1}$/)]], 
+  taxpayerType: ['']
+});
+  }
+  
 
   updateMetadata() {
-    const nodeId = '4ce06f90-95be-46f3-a06f-9095be36f358';
+    const nodeId = '905d2fc6-66ff-42de-9d2f-c666ff52de06';
+
     const updatedProps = {
-      'lracore:sad500Type': this.selectedCategory,
-      'lracore:dateSubmitted': this.submittedDate?.toISOString()
+      'lracore:TINNumber': this.form.value.tin || null,
+      'lracore:etinNumber': this.form.value.etin,
+      'lracore:taxpayerType': this.form.value.taxpayerType || null
     };
 
     this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
@@ -69,20 +78,30 @@ ngOnInit() {
     });
   }
 
-saveChanges() {
+  saveChanges() {
+  if (this.form.get('etin')?.invalid) {
+    this.snackBar.open('ETIN must be in the correct format 9999999-9.', 'Close', {
+      duration: 3000,
+      panelClass: ['error-snackbar'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    return;
+  }
 
-  this.selectedCategory = this.form.value.sad500Type;
-  this.submittedDate = this.form.value.dateSubmitted;
-  this.updateMetadata();
 
-  this.snackBar.open('Changes saved successfully ✅', 'Close', {
-    duration: 3000,
-    horizontalPosition: 'right',
-    verticalPosition: 'top',
-    panelClass: ['save-snackbar']
-    
-  });
 
-}
+    this.updateMetadata();
 
+    this.snackBar.open('Changes saved successfully ✅', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: ['save-snackbar']
+    });
+  }
+
+  cancel() {
+    this.router.navigate(['/personal-files']);
+  }
 }

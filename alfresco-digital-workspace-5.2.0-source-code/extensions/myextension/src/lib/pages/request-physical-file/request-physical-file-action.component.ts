@@ -8,12 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { NodesApiService } from '@alfresco/adf-content-services';
+//import { NodesApiService } from '@alfresco/adf-content-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Router } from '@angular/router';
 
 //import { nodeHasProperty } from '../../core/rules/node.evaluator';
 //import { NodeEntry, NodePaging, Node } from '@alfresco/js-api';
@@ -39,50 +39,42 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   standalone: true
 })
 export class RequestPhysicalFileComponent {
-  selectedCategory: any;
-  submittedDate: any;
+  requestReason: any;
+  returnDate: any;
   form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar) {}
+constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private router: Router) {}
 
 ngOnInit() {
   this.form = this.fb.group({
-    sad500Type: ['', Validators.required],
-    dateSubmitted: [null, Validators.required]
+    requestReason: ['', Validators.required],
+    returnDate: [null, Validators.required]
   });
 }
 
-  updateMetadata() {
-    const nodeId = '4ce06f90-95be-46f3-a06f-9095be36f358';
-    const updatedProps = {
-      'lracore:sad500Type': this.selectedCategory,
-      'lracore:dateSubmitted': this.submittedDate?.toISOString()
-    };
 
-    this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
-      next: (response: any) => {
-        console.log('Node updated successfully:', response);
-      },
-      error: (err) => {
-        console.error('Error updating node:', err);
-      }
+saveRequestPhysicalFileChanges() {
+    if (this.form.invalid) {
+      this.snackBar.open('Please fill in all required fields correctly ❗', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    const { requestReason, returnDate } = this.form.value;
+    console.log('Request reason:', requestReason);
+    console.log('Date submitted:', returnDate);
+this.snackBar.open('Request physical file parameters saved ✅', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: ['save-snackbar']
     });
   }
-
-saveChanges() {
-
-  this.selectedCategory = this.form.value.sad500Type;
-  this.submittedDate = this.form.value.dateSubmitted;
-  this.updateMetadata();
-
-  this.snackBar.open('Changes saved successfully ✅', 'Close', {
-    duration: 3000,
-    horizontalPosition: 'right',
-    verticalPosition: 'top',
-    panelClass: ['save-snackbar']
-    
-  });
-
-}
-
+  cancel() {
+    this.router.navigate(['/personal-files']);
+  }
 }
