@@ -1,40 +1,102 @@
-<mat-card class="form-card">
-  <mat-card-title>Update Document Data</mat-card-title>
-  <mat-card-content>
+<mat-card class="main-card">
+  <div class="scroll-container">
+
+  <div class="card-header"></div>
+  <h2>Update Document Data</h2>
+
+  <!-- General Section -->
+  <mat-card class="nested-card">
+    <div class="nested-header">General</div>
     <form [formGroup]="form">
-      <div class="form-section">
-            <mat-form-field appearance="fill" class="full-width">
-            <mat-label>XXXXXXXXXX</mat-label>
-            <mat-select formControlName="sad500Type">
-              <mat-option value="Vehicle">Vehicle</mat-option>
-              <mat-option value="Other Goods and Services">Other Goods and Services</mat-option>
-            </mat-select>
-            <mat-error *ngIf="form.get('sad500Type')?.hasError('required')">
-              SAD500 Type is required
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill" class="full-width">
-            <mat-label>QQQQQQQQQQQ</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              placeholder="DD/MM/YYYY"
-              formControlName="dateSubmitted"
-            />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="form.get('dateSubmitted')?.hasError('required')">
-              Date Submitted is required
-            </mat-error>
-          </mat-form-field>
-      </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Financial Period (MM-CCYY)</mat-label>
+        <input matInput formControlName="financialPeriod" placeholder="e.g. 03-2024" />
+        <mat-error *ngIf="form.get('financialPeriod')?.hasError('pattern')">
+          Format must be MM-CCYY
+        </mat-error>
+      </mat-form-field>
     </form>
-  </mat-card-content>
+  </mat-card>
 
-  <mat-card-actions align="end">
-    
-    <button mat-raised-button color="primary" (click)="saveChanges()" [disabled]="form.invalid">Save Changes</button>
-    <button mat-button color="warn">Cancel</button>
-  </mat-card-actions>
+  <!-- Correspondence Section -->
+  <mat-card class="nested-card">
+    <div class="nested-header">Correspondence</div>
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Correspondence Type</mat-label>
+        <mat-select formControlName="correspondenceType">
+          <mat-option value="Received">Received</mat-option>
+          <mat-option value="Sent">Sent</mat-option>
+          
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Date of Correspondence (CCYYMMDD)</mat-label>
+        <input matInput formControlName="dateOfCorrespondence" placeholder="e.g. 20240829" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Date Received/Sent (CCYYMMDD)</mat-label>
+        <input matInput formControlName="dateReceivedSent" placeholder="e.g. 20240830" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Subject</mat-label>
+        <input matInput formControlName="subject" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Receiver/Sender</mat-label>
+        <input matInput formControlName="sender" />
+      </mat-form-field>
+    </form>
+  </mat-card>
+
+  <!-- Audit Section -->
+  <mat-card class="nested-card">
+    <div class="nested-header">Audit</div>
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Audit Period (CCYY-CCYY)</mat-label>
+        <input matInput formControlName="auditPeriod" placeholder="e.g. 2023-2024" />
+        <mat-error *ngIf="form.get('auditPeriod')?.hasError('pattern')">
+          Format must be CCYY-CCYY
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Audit Type</mat-label>
+        <mat-select formControlName="auditType">
+          <mat-option value="Verification">Verification</mat-option>
+          <mat-option value="Limited Scope Audit">Limited Scope Audit</mat-option>
+          <mat-option value="Intensive Audit">Intensive Audit</mat-option>
+          <mat-option value="Desk Audit">Desk Audit</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-card>
+
+  <!-- Collections Section -->
+  <mat-card class="nested-card">
+    <div class="nested-header">Collections</div>
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Name of Collector</mat-label>
+        <input matInput formControlName="collectorName" />
+      </mat-form-field>
+    </form>
+  </mat-card>
+
+  <!-- Action Buttons -->
+  <div class="button-row">
+    <button mat-raised-button color="primary" (click)="saveChanges()" >
+      Save Changes
+    </button>
+    <button mat-button color="warn" (click)="cancel()">Cancel</button>
+  </div>
+
+  <div class="card-footer"></div>
+</div>
+
 </mat-card>
