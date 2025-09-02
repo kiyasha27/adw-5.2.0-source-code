@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-//import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,16 +10,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { NodesApiService } from '@alfresco/adf-content-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-
-
-//import { nodeHasProperty } from '../../core/rules/node.evaluator';
-//import { NodeEntry, NodePaging, Node } from '@alfresco/js-api';
-
-
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'lib-update-document-data-action',
@@ -36,124 +28,186 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
     MatButtonModule,
     ReactiveFormsModule
   ],
-
   styleUrls: ['./update-document-data-action.component.css'],
   standalone: true
 })
 export class DocumentDataComponent {
-  selectedCategory: any;
-  submittedDate: any;
   form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private nodeApi: NodesApiService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private location: Location
+  ) {}
 
-    ngOnInit() {
+  ngOnInit() {
     this.form = this.fb.group({
-      financialPeriod: [
-        '',
-        [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])-\d{4}$/)]],
-      correspondenceType: ['', Validators.required],
-      dateOfCorrespondence: [
-         '',
-         [Validators.required, Validators.pattern(/^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/), validCCYYMMDD] ],
-      
-      dateReceivedSent: [
-        '',
-        [Validators.required, Validators.pattern(/^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/), validCCYYMMDD]], 
-      subject: ['', Validators.required],
-      sender: ['', Validators.required],
-
-      auditType: ['', Validators.required],
-     
-      collectorName: ['', Validators.required],
-            auditPeriod: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^(19|20)\d{2}-(19|20)\d{2}$/),
-          
-        ]
-      ],
+      fileType: [''],
+      documentType: [''],
+      financialPeriod: [''],
+      correspondenceType: [''],
+      dateOfCorrespondence: [''],
+      dateReceivedSent: [''],
+      subject: [''],
+      sender: [''],
+      auditType: [''],
+      auditPeriod: [''],
+      collectorName: ['']
     });
+
+    const nodeId = '82bff9bc-9919-43c4-bff9-bc9919e3c478';
+    this.nodeApi.getNode(nodeId).subscribe({
+    next: (node: any) => {
+    console.log('📥 Full node response:', node);
+
+    const props = node?.properties || {};
+    console.log('📑 Extracted properties:', props);
+    console.log('👉 DocumentType from backend:', props['lracore:documentType']);
+    console.log('👉 FileType from backend:', props['lracore:fileType']);
+
+    // Patch form with backend documentType and fileType
+    this.form.patchValue({
+      fileType: props['lracore:fileType'] || '',
+      documentType: props['lracore:documentType'] || ''
+    });
+
+    console.log('✅ Form values after patch:', this.form.value);
+  },
+  error: (err) => {
+    console.error('❌ Error loading node metadata:', err);
+    this.showError('Could not load document metadata ❌');
+  }
+});
+    
+  }
+
+  /**
+   * 🔹 Financial Period Validation
+   */
+  private validateFinancialPeriod(): boolean {
+    const ft = this.form.value.fileType;
+    const finPeriod = this.form.value.financialPeriod;
+
+    if (['Audit', 'Collection', 'Registration'].includes(ft)) {
+      if (finPeriod) {
+        this.showError("Financial Period may not be specified for 'Audit', 'Collection' or 'Registration' File Types.");
+        return false;
+      }
+      return true;
+    }
+
+  // For all other file types → financial period is required
+  if (!finPeriod) {
+    this.showError("Financial Period is required for this File Type.");
+    return false;
+  }
+
+  // Check format MM-CCYY
+  const regex = /^(0[1-9]|1[0-2])-\d{4}$/;
+  if (!regex.test(finPeriod)) {
+    this.showError("Financial Period format must be MM-CCYY (e.g., 03-2024).");
+    return false;
+  }
+
+    return true;
+  }
+
+  /**
+   * 🔹 Correspondence Validation
+   */
+  private validateCorrespondence(): boolean {
+    const dt = this.form.value.documentType;
+    const { correspondenceType, sender, subject, dateOfCorrespondence, dateReceivedSent } = this.form.value;
+
+    if (dt === 'Correspondence') {
+      if (!correspondenceType || !sender) {
+        this.showError("'Correspondence Type' and 'Receiver/Sender' must be specified for Correspondence.");
+        return false;
+      }
+
+      if ((dateOfCorrespondence && !isValidCCYYMMDD(dateOfCorrespondence)) ||
+          (dateReceivedSent && !isValidCCYYMMDD(dateReceivedSent))) {
+        this.showError("'Date of Correspondence' and 'Date Received/Sent' must be valid (format yyyyMMdd).");
+        return false;
+      }
+    } else {
+      if (correspondenceType || sender || subject || dateOfCorrespondence || dateReceivedSent) {
+        this.showError("Correspondence fields may not be specified for non-'Correspondence' documents.");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * 🔹 Audit Supporting Documents Validation
+   */
+  private validateAuditSupporting(): boolean {
+    const dt = this.form.value.documentType;
+    const { auditType, auditPeriod } = this.form.value;
+
+    if (dt === 'Audit Supporting Documents') {
+      return true;
+    } else {
+      if (auditType || auditPeriod) {
+        this.showError("Audit fields may not be specified for non-'Audit' documents.");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * 🔹 Collection Validation
+   */
+  private validateCollection(): boolean {
+    const dt = this.form.value.documentType;
+    const { collectorName } = this.form.value;
+
+    if (dt === 'Collection') {
+      return true;
+    } else {
+      if (collectorName) {
+        this.showError("'Name of Collector' may not be specified for non-'Collection' documents.");
+        return false;
+      }
+    }
+    return true;
   }
 
   saveChanges() {
-    if (this.form.valid) {
-      this.updateMetadata();
-      return;
-    }
-    else{
-      if (this.form.get('financialPeriod')?.invalid) {
-          this.snackBar.open('Financial period must be in MM-CCYY format', 'Close', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-    });
-    return;
-  }
-  else  if (this.form.get('auditPeriod')?.invalid) {
-          this.snackBar.open('Audit period must be in CCYYMMDD format', 'Close', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-    });
-    return;
-  }
-    }
+    if (!this.validateFinancialPeriod()) return;
+    if (!this.validateCorrespondence()) return;
+    if (!this.validateAuditSupporting()) return;
+    if (!this.validateCollection()) return;
 
-    this.form.markAllAsTouched(); // Show validation errors
-
-    // const errorFields = ['financialPeriod', 'dateReceivedSent', 'dateOfCorrespondence', 'auditPeriod'] as const;
-
-    // const errorMap: Record<typeof errorFields[number], string> = {
-    //   financialPeriod: 'Financial period must be in MM-CCYY format',
-    //   dateReceivedSent: 'Date received/sent must be in CCYYMMDD format',
-    //   dateOfCorrespondence: 'Correspondence date must be in CCYYMMDD format',
-    //   auditPeriod: 'Audit period must be in CCYY-CCYY format and end year must not be earlier than start year'
-    // };
-
-      // for (const field of errorFields) {
-      //   if (this.form.get(field)?.invalid) {
-      //     this.snackBar.open(errorMap[field], 'Close', {
-      //       duration: 3000,
-      //       panelClass: ['error-snackbar'],
-      //       horizontalPosition: 'right',
-      //       verticalPosition: 'top'
-      //     });
-      //     return;
-      //   }
-      // }
-
-    this.snackBar.open('Please fill out all required fields ⚠️', 'Close', {
-      duration: 3000,
-      panelClass: ['error-snackbar'],
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
-    });
+    this.updateMetadata();
+     this.location.back();
   }
 
   updateMetadata() {
-    //const f = this.form.value;
-    const nodeId = '273dc576-a2a4-46b5-bdc5-76a2a4f6b58a';
+    const nodeId = '82bff9bc-9919-43c4-bff9-bc9919e3c478';
+    const f = this.form.value;
 
     const updatedProps = {
-      'lracore:financialPeriod': this.form.value.financialPeriod || null ,
-      'lracore:correspondenceType': this.form.value.correspondenceType || null,
-      'lracore:dateOfCorrespondence': convertCCYYMMDDToISO(this.form.value.dateOfCorrespondence) || null,
-      'lracore:dateReceivedSent': convertCCYYMMDDToISO(this.form.value.dateReceivedSent) || null,
-       'lracore:subject': this.form.value.subject,
-       'lracore:sender': this.form.value.sender,
-       'lracore:auditPeriod': this.form.value.auditPeriod || null,
-       'lracore:auditType': this.form.value.auditType,
-       'lracore:collectorName': this.form.value.collectorName || null
+      'lracore:financialPeriod': f.financialPeriod || null,
+      'lracore:correspondenceType': f.correspondenceType || null,
+      'lracore:dateOfCorrespondence': convertCCYYMMDDToISO(f.dateOfCorrespondence) || null,
+      'lracore:dateReceivedSent': convertCCYYMMDDToISO(f.dateReceivedSent) || null,
+      'lracore:subject': f.subject || null,
+      'lracore:sender': f.sender || null,
+      'lracore:auditType': f.auditType || null,
+      'lracore:auditPeriod': f.auditPeriod || null,
+      'lracore:collectorName': f.collectorName || null
     };
 
     this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
       next: (response: any) => {
         console.log('Node updated successfully:', response);
-        this.snackBar.open('Changes saved successfully ✅', 'Close', {
+        this.snackBar.open('Main taxpayer changes saved successfully ✅', 'Close', {
           duration: 3000,
           panelClass: ['save-snackbar'],
           horizontalPosition: 'right',
@@ -162,12 +216,7 @@ constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private s
       },
       error: (err) => {
         console.error('Error updating node:', err);
-        this.snackBar.open('Error saving changes ❌', 'Close', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-        });
+        this.showError('Error saving changes ❌');
       }
     });
   }
@@ -175,28 +224,27 @@ constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private s
   cancel() {
     this.router.navigate(['/personal-files']);
   }
+
+  private showError(msg: string) {
+    this.snackBar.open(msg, 'Close', {
+      duration: 4000,
+      panelClass: ['error-snackbar'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+  }
 }
 
-// // ✅ Custom validator for auditPeriod range
-// function auditPeriodRangeValidator(control: AbstractControl): ValidationErrors | null {
-//   const value = control.value;
-//   const match = /^(19|20)\d{2}-(19|20)\d{2}$/.exec(value);
-//   if (!match) return null;
-
-//   const [startYear, endYear] = value.split('-').map(Number);
-//   return endYear >= startYear ? null : { invalidRange: true };
-// }
-
-
-export function validCCYYMMDD(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
-  if (!/^\d{8}$/.test(value)) return { pattern: true };
-
+/**
+ * ✅ Date helper: CCYYMMDD validation
+ */
+function isValidCCYYMMDD(value: string): boolean {
+  if (!/^\d{8}$/.test(value)) return false;
   const year = +value.slice(0, 4);
   const month = +value.slice(4, 6);
   const day = +value.slice(6, 8);
   const date = new Date(`${year}-${month}-${day}`);
-  return isNaN(date.getTime()) ? { invalidDate: true } : null;
+  return !isNaN(date.getTime());
 }
 
 function convertCCYYMMDDToISO(dateStr: string): string | null {
