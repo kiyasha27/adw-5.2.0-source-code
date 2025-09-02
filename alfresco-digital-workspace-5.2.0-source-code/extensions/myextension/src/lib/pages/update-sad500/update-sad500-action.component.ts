@@ -11,9 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { NodesApiService } from '@alfresco/adf-content-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
+//import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -39,12 +40,13 @@ export class Sad500Component {
   submittedDate: any;
   form!: FormGroup;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router) {}
+constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router, private location: Location) {}
 
+// validations completed for this action after confirming RSL original files
 ngOnInit() {
   this.form = this.fb.group({
-    sad500Type: ['', Validators.required],
-    dateSubmitted: [null, Validators.required]
+    sad500Type: [''],
+    dateSubmitted: [null, this.dateNotInFuture]
   });
   
 }
@@ -68,23 +70,46 @@ ngOnInit() {
   }
 
 saveChanges() {
+  
+  if (this.form.invalid) {
+    this.snackBar.open('Date submitted can not be a future date. Please provide a valid date.', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
+    });
+    return;
+  }
+
 
   this.selectedCategory = this.form.value.sad500Type;
   this.submittedDate = this.form.value.dateSubmitted;
   this.updateMetadata();
 
-  this.snackBar.open('Changes saved successfully ✅', 'Close', {
+  this.snackBar.open('SAD500 changes saved successfully ✅', 'Close', {
     duration: 3000,
     horizontalPosition: 'right',
     verticalPosition: 'top',
     panelClass: ['save-snackbar']
     
   });
+  this.location.back();// nav to the previous page after saving changes
 
 }
 
 cancel() {
-  this.router.navigate(['/personal-files']);
+  this.router.navigate(['/personal-files']); // nav to the users personal files after canceling prompt
+}
+
+dateNotInFuture(control: any) {
+  const selectedDate = new Date(control.value);
+  const today = new Date();
+
+  // Strip time portion for accurate comparison
+  selectedDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  return selectedDate >= today ? { futureDate: true } : null;
 }
 
 }

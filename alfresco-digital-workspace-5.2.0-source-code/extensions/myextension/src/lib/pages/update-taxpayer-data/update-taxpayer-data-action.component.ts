@@ -14,12 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-
-//import { nodeHasProperty } from '../../core/rules/node.evaluator';
-//import { NodeEntry, NodePaging, Node } from '@alfresco/js-api';
-
-
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'lib-update-taxpayer-data-action',
   templateUrl: './update-taxpayer-data-action.component.html',
@@ -45,7 +40,10 @@ export class TaxpayerDataComponent {
     private fb: FormBuilder,
     private nodeApi: NodesApiService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private location: Location
+
+
   ) {}
 
   ngOnInit() {
@@ -136,6 +134,7 @@ export class TaxpayerDataComponent {
     }
 
     this.updateMetadata();
+     this.location.back();
   }
 
   updateMetadata() {

@@ -49,15 +49,13 @@ export class TaxNumberComponent {
     private router: Router
   ) {}
 
-  ngOnInit() {
-
+    ngOnInit() {
   this.form = this.fb.group({
-  tin: [''],
-  etin: ['', [Validators.required,Validators.pattern(/^\d{5,9}-\d{1}$/)]], 
-  taxpayerType: ['']
-});
-  }
-  
+    tin: ['', [Validators.pattern(/^\d{7}-\d{1}$/)]],
+    etin: ['', [Validators.pattern(/^2\d{8}-\d{1}$/)]],
+    taxpayerType: ['']
+  });
+}
 
   updateMetadata() {
     const nodeId = '905d2fc6-66ff-42de-9d2f-c666ff52de06';
@@ -78,9 +76,15 @@ export class TaxNumberComponent {
     });
   }
 
-  saveChanges() {
-  if (this.form.get('etin')?.invalid) {
-    this.snackBar.open('ETIN must be in the correct format 9999999-9.', 'Close', {
+
+
+saveChanges() {
+  const tin = this.form.get('tin')?.value?.trim();
+  const etin = this.form.get('etin')?.value?.trim();
+
+  // 1. Both empty?
+  if ((!tin || tin === '') && (!etin || etin === '')) {
+    this.snackBar.open('TIN/ETIN must be specified', 'Close', {
       duration: 3000,
       panelClass: ['error-snackbar'],
       horizontalPosition: 'right',
@@ -89,17 +93,39 @@ export class TaxNumberComponent {
     return;
   }
 
-
-
-    this.updateMetadata();
-
-    this.snackBar.open('Changes saved successfully ✅', 'Close', {
+  // 2. Invalid TIN?
+  if (tin && this.form.get('tin')?.invalid) {
+    this.snackBar.open('TIN must be of format 9999999-9', 'Close', {
       duration: 3000,
+      panelClass: ['error-snackbar'],
       horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: ['save-snackbar']
+      verticalPosition: 'top'
     });
+    return;
   }
+
+  // 3. Invalid ETIN?
+  if (etin && this.form.get('etin')?.invalid) {
+    this.snackBar.open('ETIN must be of format 299999999-9', 'Close', {
+      duration: 3000,
+      panelClass: ['error-snackbar'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+    return;
+  }
+
+  // 4. Proceed to update
+  this.updateMetadata();
+
+  this.snackBar.open('Taxnumber changes saved successfully ✅', 'Close', {
+    duration: 3000,
+    horizontalPosition: 'right',
+    verticalPosition: 'top',
+    panelClass: ['save-snackbar']
+  });
+}
+
 
   cancel() {
     this.router.navigate(['/personal-files']);
