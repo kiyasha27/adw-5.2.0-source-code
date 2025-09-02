@@ -145,6 +145,36 @@ export class DocumentDataComponent {
   /**
    * 🔹 Audit Supporting Documents Validation
    */
+private validateAuditSupporting(): boolean {
+  const dt = this.form.value.documentType;
+  const { auditType, auditPeriod } = this.form.value;
+
+  if (dt === 'Audit Supporting Documents') {
+    if (auditPeriod) {
+      // Validate CCYY-CCYY format
+      const regex = /^\d{4}-\d{4}$/;
+      if (!regex.test(auditPeriod)) {
+        this.showError("Audit Period must be in CCYY-CCYY format (e.g., 2022-2023).");
+        return false;
+      }
+      // Validate consecutive years
+      const [startYear, endYear] = auditPeriod.split('-').map(Number);
+      if (endYear - startYear !== 1) {
+        this.showError("Audit Period years must be consecutive (e.g., 2022-2023).");
+        return false;
+      }
+    }
+    return true;
+  } else {
+    if (auditType || auditPeriod) {
+      this.showError("Audit fields may not be specified for non-'Audit' documents.");
+      return false;
+    }
+  }
+  return true;
+}
+
+/* original without auditPeriod validations
   private validateAuditSupporting(): boolean {
     const dt = this.form.value.documentType;
     const { auditType, auditPeriod } = this.form.value;
@@ -158,7 +188,7 @@ export class DocumentDataComponent {
       }
     }
     return true;
-  }
+  } */
 
   /**
    * 🔹 Collection Validation
