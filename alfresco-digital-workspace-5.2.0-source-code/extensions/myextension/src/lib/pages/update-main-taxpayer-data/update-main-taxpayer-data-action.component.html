@@ -40,6 +40,17 @@
         </mat-error>
       </mat-form-field>
 
+      
+      <!-- Financial Year -->
+      <mat-form-field appearance="fill">
+        <mat-label>Financial Year:</mat-label>
+        <input matInput formControlName="financialYear" placeholder="e.g. 2024/2025" />
+        <mat-error *ngIf="form.get('financialYear')?.hasError('required')">
+          Financial Year is required
+        </mat-error>
+      </mat-form-field>
+
+
       <!-- Document Type -->
       <mat-form-field appearance="fill">
         <mat-label>Document Type:</mat-label>
@@ -60,17 +71,6 @@
           Document Type is required
         </mat-error>
       </mat-form-field>
-
-      <!-- Financial Year -->
-      <mat-form-field appearance="fill">
-        <mat-label>Financial Year:</mat-label>
-        <input matInput formControlName="financialYear" placeholder="e.g. 2024/2025" />
-        <mat-error *ngIf="form.get('financialYear')?.hasError('required')">
-          Financial Year is required
-        </mat-error>
-      </mat-form-field>
-
-
 
       <!-- Buttons -->
       <div class="button-row">

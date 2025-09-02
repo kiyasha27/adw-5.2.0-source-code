@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 
 //import { nodeHasProperty } from '../../core/rules/node.evaluator';
@@ -46,7 +47,8 @@ export class TaxNumberComponent {
     private fb: FormBuilder,
     private nodeApi: NodesApiService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
     ngOnInit() {
@@ -124,6 +126,8 @@ saveChanges() {
     verticalPosition: 'top',
     panelClass: ['save-snackbar']
   });
+
+    this.location.back();
 }
 
 
