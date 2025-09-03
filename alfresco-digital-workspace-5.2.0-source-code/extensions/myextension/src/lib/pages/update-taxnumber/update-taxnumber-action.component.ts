@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { NodesApiService } from '@alfresco/adf-content-services';
+import { NodesApiService, SearchService } from '@alfresco/adf-content-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
@@ -16,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-
+import { ResultSetPaging, ResultSetRowEntry } from '@alfresco/js-api';
 
 
 //import { nodeHasProperty } from '../../core/rules/node.evaluator';
@@ -52,7 +52,8 @@ export class TaxNumberComponent {
     private nodeApi: NodesApiService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private location: Location, private route: ActivatedRoute
+    private location: Location, private route: ActivatedRoute,
+    private searchService: SearchService,
   ) {}
 
     ngOnInit() {
@@ -66,6 +67,61 @@ export class TaxNumberComponent {
   this.nodeId = this.route.snapshot.paramMap.get('nodeId')!;
   
 }
+
+
+searchFolder() {
+  // Get the TIN and ETIN values entered in the form and trim whitespace
+  const tin = this.form.get('tin')?.value?.trim();
+  const etin = this.form.get('etin')?.value?.trim();
+
+  // Validate: if both TIN and ETIN are empty, show an error and exit
+  if ((!tin || tin === '') && (!etin || etin === '')) {
+    this.snackBar.open('TIN/ETIN must be specified', 'Close', { 
+      duration: 3000, 
+      panelClass: ['error-snackbar'] 
+    });
+    return; // Stop execution if no input
+  }
+
+  // Build the search term using Alfresco's search syntax
+  // Here, we are looking for nodes (folders) with the aspect 'lracore:TaxNumberAspect'
+  // AND whose cm:name matches either the ETIN (preferred) or TIN entered
+  const searchTerm = `ASPECT:"lracore:TaxNumberAspect" AND (cm:name:"${etin || tin}")`;
+
+  // Call the Alfresco search service
+  // Parameters: 
+  // - searchTerm: our query string
+  // - maxResults: 10 results max
+  // - skipCount: 0 (start from first result)
+  this.searchService.search(searchTerm, 10, 0).subscribe({
+    next: (res: ResultSetPaging) => {
+
+      // Extract the search results safely
+      const entries: ResultSetRowEntry[] = res.list?.entries || [];
+
+      // If no matching folder is found, show a message
+      if (entries.length === 0) {
+        this.snackBar.open('No folder found for the provided TIN/ETIN', 'Close', { duration: 3000 });
+        return;
+      }
+
+      // If a folder is found, log it and notify the user
+      const folder = entries[0].entry; // The first matching folder
+      console.log('Found folder:', folder);
+      this.snackBar.open(`Folder found: ${folder.name}`, 'Close', { duration: 3000 });
+
+      // Here you could call updateMetadata(folder.id) to update its properties
+      // or perform other actions on the found folder.
+    },
+    error: err => {
+      // 8️⃣ Handle search errors
+      console.error('Search error:', err);
+      this.snackBar.open('Error performing search', 'Close', { duration: 3000 });
+    }
+  });
+}
+
+
 
   updateMetadata() {
     const nodeId = '905d2fc6-66ff-42de-9d2f-c666ff52de06';
@@ -126,6 +182,7 @@ saveChanges() {
   }
 
   // 4. Proceed to update
+  this.searchFolder();
   this.updateMetadata();
 
   this.snackBar.open('Taxnumber changes saved successfully ✅', 'Close', {

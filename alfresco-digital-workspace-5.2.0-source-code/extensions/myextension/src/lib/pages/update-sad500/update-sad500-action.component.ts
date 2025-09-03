@@ -42,11 +42,10 @@ export class Sad500Component {
 
 constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router, private location: Location) {}
 
-// validations completed for this action after confirming RSL original files
 ngOnInit() {
   this.form = this.fb.group({
     sad500Type: [''],
-    dateSubmitted: [null, this.dateNotInFuture]
+    dateSubmitted: [null]
   });
   
 }
@@ -72,7 +71,7 @@ ngOnInit() {
 saveChanges() {
   
   if (this.form.invalid) {
-    this.snackBar.open('Date submitted can not be a future date. Please provide a valid date.', 'Close', {
+    this.snackBar.open('Date submitted can not be a future date. Please provide a valid', 'Close', {
       duration: 3000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
@@ -100,16 +99,4 @@ saveChanges() {
 cancel() {
   this.router.navigate(['/personal-files']); // nav to the users personal files after canceling prompt
 }
-
-dateNotInFuture(control: any) {
-  const selectedDate = new Date(control.value);
-  const today = new Date();
-
-  // Strip time portion for accurate comparison
-  selectedDate.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
-
-  return selectedDate >= today ? { futureDate: true } : null;
-}
-
 }
