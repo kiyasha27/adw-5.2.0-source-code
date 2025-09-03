@@ -60,12 +60,12 @@ export class DocumentDataComponent {
     const nodeId = '82bff9bc-9919-43c4-bff9-bc9919e3c478';
     this.nodeApi.getNode(nodeId).subscribe({
     next: (node: any) => {
-    console.log('📥 Full node response:', node);
+    console.log('Full node response:', node);
 
     const props = node?.properties || {};
-    console.log('📑 Extracted properties:', props);
-    console.log('👉 DocumentType from backend:', props['lracore:documentType']);
-    console.log('👉 FileType from backend:', props['lracore:fileType']);
+    console.log('Extracted properties:', props);
+    console.log('DocumentType from backend:', props['lracore:documentType']);
+    console.log('FileType from backend:', props['lracore:fileType']);
 
     // Patch form with backend documentType and fileType
     this.form.patchValue({
@@ -76,8 +76,8 @@ export class DocumentDataComponent {
     console.log('✅ Form values after patch:', this.form.value);
   },
   error: (err) => {
-    console.error('❌ Error loading node metadata:', err);
-    this.showError('Could not load document metadata ❌');
+    console.error('Error loading node metadata:', err);
+    this.showError('Could not load document metadata');
   }
 });
     

@@ -15,6 +15,8 @@ import { Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+
 
 
 //import { nodeHasProperty } from '../../core/rules/node.evaluator';
@@ -42,13 +44,15 @@ import { Location } from '@angular/common';
 })
 export class TaxNumberComponent {
   form!: FormGroup;
+  nodeId!: string;
+
 
   constructor(
     private fb: FormBuilder,
     private nodeApi: NodesApiService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private location: Location
+    private location: Location, private route: ActivatedRoute
   ) {}
 
     ngOnInit() {
@@ -57,6 +61,10 @@ export class TaxNumberComponent {
     etin: ['', [Validators.pattern(/^2\d{8}-\d{1}$/)]],
     taxpayerType: ['']
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  this.nodeId = this.route.snapshot.paramMap.get('nodeId')!;
+  
 }
 
   updateMetadata() {
