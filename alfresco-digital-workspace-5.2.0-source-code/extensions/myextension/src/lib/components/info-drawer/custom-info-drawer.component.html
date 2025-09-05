@@ -1,0 +1,99 @@
+<div class="custom-info-drawer">
+  <div class="drawer-header">
+    <h3>{{ formData.title }}</h3>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="drawer-content">
+    <form (ngSubmit)="onSubmit()" #drawerForm="ngForm">
+      <div *ngFor="let field of formData.fields" class="form-field">
+        
+        <!-- Text Input -->
+        <mat-form-field *ngIf="field.type === 'text'" appearance="outline" class="full-width">
+          <mat-label>{{ field.label }}</mat-label>
+          <input 
+            matInput 
+            [(ngModel)]="field.value" 
+            [name]="field.name"
+            [required]="field.required"
+            placeholder="{{ field.label }}">
+          <mat-error *ngIf="field.required">{{ field.label }} is required</mat-error>
+        </mat-form-field>
+
+        <!-- Number Input -->
+        <mat-form-field *ngIf="field.type === 'number'" appearance="outline" class="full-width">
+          <mat-label>{{ field.label }}</mat-label>
+          <input 
+            matInput 
+            type="number"
+            [(ngModel)]="field.value" 
+            [name]="field.name"
+            [required]="field.required"
+            placeholder="{{ field.label }}">
+          <mat-error *ngIf="field.required">{{ field.label }} is required</mat-error>
+        </mat-form-field>
+
+        <!-- Date Input -->
+        <mat-form-field *ngIf="field.type === 'date'" appearance="outline" class="full-width">
+          <mat-label>{{ field.label }}</mat-label>
+          <input 
+            matInput 
+            type="date"
+            [(ngModel)]="field.value" 
+            [name]="field.name"
+            [required]="field.required">
+          <mat-error *ngIf="field.required">{{ field.label }} is required</mat-error>
+        </mat-form-field>
+
+        <!-- Textarea -->
+        <mat-form-field *ngIf="field.type === 'textarea'" appearance="outline" class="full-width">
+          <mat-label>{{ field.label }}</mat-label>
+          <textarea 
+            matInput 
+            [(ngModel)]="field.value" 
+            [name]="field.name"
+            [required]="field.required"
+            rows="3"
+            placeholder="{{ field.label }}">
+          </textarea>
+          <mat-error *ngIf="field.required">{{ field.label }} is required</mat-error>
+        </mat-form-field>
+
+        <!-- Select Dropdown -->
+        <mat-form-field *ngIf="field.type === 'select'" appearance="outline" class="full-width">
+          <mat-label>{{ field.label }}</mat-label>
+          <mat-select 
+            [(ngModel)]="field.value" 
+            [name]="field.name"
+            [required]="field.required">
+            <mat-option *ngFor="let option of field.options" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="field.required">{{ field.label }} is required</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="drawer-actions">
+        <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!drawerForm.form.valid">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Selected Node Info -->
+  <div class="node-info" *ngIf="selectedNode">
+    <h4>Selected Document</h4>
+    <p><strong>Name:</strong> {{ selectedNode.name }}</p>
+    <p><strong>Type:</strong> {{ selectedNode.nodeType }}</p>
+    <p><strong>Modified:</strong> {{ selectedNode.modifiedAt | date }}</p>
+  </div>
+</div>

@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -39,10 +40,14 @@ export class Sad500Component {
   selectedCategory: any;
   submittedDate: any;
   form!: FormGroup;
+  nodeId: string | null = null;
 
-constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router, private location: Location) {}
+constructor(private fb: FormBuilder, private nodeApi: NodesApiService, private snackBar: MatSnackBar, private router: Router, private location: Location, private route: ActivatedRoute) {}
 
 ngOnInit() {
+  this.nodeId = this.route.snapshot.paramMap.get('nodeId');
+    console.log('Received nodeId:', this.nodeId);
+
   this.form = this.fb.group({
     sad500Type: [''],
     dateSubmitted: [null]

@@ -139,47 +139,8 @@
     ],
 
     "actions": [
-         {
-            "id": "app.actions.update-taxnumber",
-            "type": "NAVIGATE_URL",
-            "payload": "/update-taxnumber"
-        },
-         {
-            "id": "app.actions.update-taxpayer-data",
-            "type": "NAVIGATE_URL",
-            "payload": "/update-taxpayer-data"
-        },
-{
-  "id": "app.actions.update-sad500",
-  "type": "NAVIGATE_URL",
-  "payload": "/update-sad500"
-},
-                {
-            "id": "app.actions.update-main-taxpayer-data",
-            "type": "NAVIGATE_URL",
-            "payload": "/update-main-taxpayer-data"
-        },
-             {
-            "id": "app.actions.update-document-data",
-            "type": "NAVIGATE_URL",
-            "payload": "/update-document-data"
-        },
-                     {
-            "id": "app.actions.run-script",
-            "type": "NAVIGATE_URL",
-            "payload": "/run-script"
-        },
-                             {
-            "id": "app.actions.request-physical-file",
-            "type": "NAVIGATE_URL",
-            "payload": "/request-physical-file"
-        },
-                             {
-            "id": "app.actions.place-in-file",
-            "type": "NAVIGATE_URL",
-            "payload": "/place-in-file"
-        },
-
+        
+         
         {
             "id": "manage-security-mark.actions.execute",
             "type": "MANAGE_SECURITY_MARK",
@@ -239,6 +200,8 @@
                 "icon": "more_vert",
                 "title": "APP.ACTIONS.MORE",
                 "children": [
+
+                    
                     {
                         "id": "app.toolbar.toggleLock",
                         "order": 110,

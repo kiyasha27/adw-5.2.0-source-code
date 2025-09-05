@@ -6,11 +6,12 @@
  * agreement is prohibited.
  */
 
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppExtensionService } from '@alfresco/aca-shared';
 import { DestroyRef, Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { getAppSelection, SetSelectedNodesAction } from '@alfresco/aca-shared/store';
 import { ContentActionRef, SelectionState } from '@alfresco/adf-extensions';
-import { AppExtensionService } from '@alfresco/aca-shared';
-import { Store } from '@ngrx/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Directive()
@@ -20,6 +21,9 @@ export abstract class ToolbarComponent implements OnInit, OnDestroy {
     actions: Array<ContentActionRef>;
 
     private readonly destroyRef = inject(DestroyRef);
+    protected readonly router = inject(Router);
+    selectedNode: any;
+    actionService: any;
 
     protected constructor(protected store: Store<any>, protected appExtensionService: AppExtensionService) { }
 
@@ -49,5 +53,21 @@ export abstract class ToolbarComponent implements OnInit, OnDestroy {
   onActionClick(action: any) {
     console.log('Action executed:', action);
     // later you can trigger your Alfresco action here
+    
+  
+
+
+}
+openInfoDrawer() {
+    if (!this.selectedNode) {
+      console.warn('No node selected!');
+      return;
+    }
+
+    this.actionService.execute({
+      id: 'sad500.actions.execute',
+      entry: this.selectedNode
+    });
   }
 }
+
