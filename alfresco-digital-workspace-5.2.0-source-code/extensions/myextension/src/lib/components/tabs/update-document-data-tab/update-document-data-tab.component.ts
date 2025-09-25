@@ -324,7 +324,7 @@ export class UpdateDocumentDataTabComponent implements OnInit, OnDestroy {
     const dt = this.form.value.documentType;
     const { collectorName } = this.form.value;
 
-    if (dt === 'Collection') return true;
+    if (dt === 'Collection Information Statement') return true;
     if (collectorName) {
       this.showError("'Name of Collector' may not be specified for non-'Collection' documents.");
       return false;

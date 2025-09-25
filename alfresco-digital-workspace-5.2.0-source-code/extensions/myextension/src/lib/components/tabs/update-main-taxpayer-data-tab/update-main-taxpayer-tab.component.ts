@@ -126,8 +126,8 @@ export class UpdateMainTaxpayerDataTabComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      taxpayerType: ['', Validators.required],
-      fileType: ['', Validators.required],
+      taxpayerType: [''],
+      fileType: [''],
       documentType: ['', Validators.required],
       financialYear: ['']
     });

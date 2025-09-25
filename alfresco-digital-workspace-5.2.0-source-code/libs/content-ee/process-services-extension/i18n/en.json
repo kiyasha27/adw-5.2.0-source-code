@@ -20,7 +20,7 @@
         },
         "MENU": {
             "PROCESS_MANAGEMENT": "Process Management",
-            "CREATE_NEW_PROCESS": "Start PCIS Process",
+            "CREATE_NEW_PROCESS": "Start Process",
             "CREATE_PROCESS_NOT_ALLOWED": "New process can not be created"
         },
         "PROCESS_SUBMENU": {
@@ -43,7 +43,7 @@
             "ACTION": "View running process"
         },
         "NO_PROCESS_DEFINITIONS": "No process definitions available",
-        "SIDE_NAV_TITLE": "PCIS Workflow",
+        "SIDE_NAV_TITLE": "Workflow",
         "STATUS": {
             "COMPLETED": "Completed",
             "RUNNING": "Running",

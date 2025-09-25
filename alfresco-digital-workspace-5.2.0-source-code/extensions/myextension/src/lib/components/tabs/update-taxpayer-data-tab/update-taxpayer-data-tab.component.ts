@@ -231,8 +231,8 @@ export class UpdateTaxpayerDataTabComponent implements OnInit, OnDestroy {
       TINNumber: ['', [Validators.pattern(/^\d{5,7}-\d{1}$/)]],
       etinNumber: ['', [Validators.pattern(/^\d{5,9}-\d{1}$/)]],
       taxpayerType: [''],
-      fileType: [''],
-      documentType: [''],
+      fileType: ['', Validators.required],
+      documentType: ['', Validators.required],
       financialYear: [''],
       financialPeriod: [''],
       legalName: [''],
@@ -315,7 +315,7 @@ export class UpdateTaxpayerDataTabComponent implements OnInit, OnDestroy {
     if (!this.validateCollection()) return;
     if (!this.validateBusinessRegistration()) return;
     if (!this.validateIndividualRegistration()) return;
-
+if (!this.validateFieldRelevance()) return;  
     this.updateMetadata();
     this.infoDrawerService.closeDrawer();
   }
@@ -340,6 +340,38 @@ export class UpdateTaxpayerDataTabComponent implements OnInit, OnDestroy {
 
     return true;
   }
+
+private validateFieldRelevance(): boolean {
+  const { fileType, documentType, subject, exciseCommodity, legalName, tradingName, employeeName, dateReceivedSent, dateOfCorrespondence, correspondenceType, sender } = this.form.value;
+
+  // Block Correspondence-only fields
+  if (fileType !== 'Correspondence' && documentType !== 'Correspondence') {
+    if (subject || dateReceivedSent || dateOfCorrespondence || correspondenceType || sender ) {
+      this.showError("Subject may not be specified unless document is Correspondence");
+      return false;
+    }
+  }
+
+  // Block Excise-only fields
+  if (documentType !== 'Excise Tax Return') {
+    if (exciseCommodity) {
+      this.showError("Excise Commodity may only be specified for Excise Tax Return documents");
+      return false;
+    }
+  }
+
+  // Block Registration-only fields
+  if (fileType !== 'Registration') {
+    if (legalName || tradingName || employeeName) {
+      this.showError("Registration fields may only be specified for Registration documents");
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
 
   private validateFinancialYear(): boolean {
     const fileType = this.form.value.fileType;
@@ -520,45 +552,54 @@ export class UpdateTaxpayerDataTabComponent implements OnInit, OnDestroy {
   }
 
   private updateMetadata(): void {
-    const nodeId = this.selectedNode?.entry?.id || this.selectedNode?.id;
-    if (!nodeId) {
-      this.showError('No document selected');
-      return;
-    }
-
-    const f = this.form.value;
-    const updatedProps = {
-      'lracore:TINNumber': f.TINNumber || null,
-      'lracore:etinNumber': f.etinNumber || null,
-      'lracore:taxpayerType': f.taxpayerType || null,
-      'lracore:fileType': f.fileType || null,
-      'lracore:documentType': f.documentType || null,
-      'lracore:financialYear': f.financialYear || null,
-      'lracore:financialPeriod': f.financialPeriod || null,
-      'lracore:legalName': f.legalName || null,
-      'lracore:tradingName': f.tradingName || null,
-      'lracore:taxpayerName': f.employeeName || null,
-      'lracore:correspondenceType': f.correspondenceType || null,
-      'lracore:sender': f.sender || null,
-      'lracore:subject': f.subject || null,
-      'lracore:dateOfCorrespondence': this.convertCCYYMMDDToISO(f.dateOfCorrespondence) || null,
-      'lracore:dateReceivedSent': this.convertCCYYMMDDToISO(f.dateReceivedSent) || null,
-      'lracore:auditType': f.auditType || null,
-      'lracore:auditPeriod': f.auditPeriod || null,
-      'lracore:collectorName': f.collectorName || null,
-      'lracore:exciseCommodity': f.exciseCommodity || null
-    };
-
-    this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
-      next: () => this.showSuccess('Taxpayer data updated successfully ✅'),
-      error: (err) => {
-      console.error('Error updating TPD:', err);
-     
-      
-    }
-    });
-    this.form.reset();
+  const nodeId = this.selectedNode?.entry?.id || this.selectedNode?.id;
+  if (!nodeId) {
+    this.showError('No document selected');
+    return;
   }
+
+  const f = this.form.value;
+
+  // Start with shared properties
+  const updatedProps: any = {
+    'lracore:TINNumber': f.TINNumber || null,
+    'lracore:etinNumber': f.etinNumber || null,
+    'lracore:taxpayerType': f.taxpayerType || null,
+    'lracore:fileType': f.fileType || null,
+    'lracore:financialYear': f.financialYear || null,
+    'lracore:financialPeriod': f.financialPeriod || null,
+    'lracore:legalName': f.legalName || null,
+    'lracore:tradingName': f.tradingName || null,
+    'lracore:taxpayerName': f.employeeName || null,
+    'lracore:correspondenceType': f.correspondenceType || null,
+    'lracore:sender': f.sender || null,
+    'lracore:subject': f.subject || null,
+    'lracore:dateOfCorrespondence': this.convertCCYYMMDDToISO(f.dateOfCorrespondence) || null,
+    'lracore:dateReceivedSent': this.convertCCYYMMDDToISO(f.dateReceivedSent) || null,
+    'lracore:auditType': f.auditType || null,
+    'lracore:auditPeriod': f.auditPeriod || null,
+    'lracore:collectorName': f.collectorName || null,
+    'lracore:exciseCommodity': f.exciseCommodity || null
+  };
+
+  // Only add documentType if it's not BTRF or ITRF
+  if (
+    f.documentType !== 'Business Taxpayer Registration Form' &&
+    f.documentType !== 'Individual Taxpayer Registration Form'
+  ) {
+    updatedProps['lracore:documentType'] = f.documentType || null;
+  }
+
+  this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
+    next: () => this.showSuccess('Taxpayer data updated successfully ✅'),
+    error: (err) => {
+      console.error('Error updating TPD:', err);
+      this.showError('Failed to update taxpayer data ❌');
+    }
+  });
+
+  this.form.reset();
+}
 
   //  all other existing validation methods here ...
 

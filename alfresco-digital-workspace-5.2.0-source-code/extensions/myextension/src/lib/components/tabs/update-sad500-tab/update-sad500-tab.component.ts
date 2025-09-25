@@ -94,7 +94,7 @@ export class UpdateSad500TabComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = this.fb.group({
       sad500Type: [''],
-      dateSubmitted: [null, [this.futureDateValidator]]
+      dateSubmitted: ['']
     });
 
     // ✅ Subscribe like in TIN/ETIN
@@ -120,13 +120,13 @@ export class UpdateSad500TabComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private futureDateValidator(control: any) {
+ /*  private futureDateValidator(control: any) {
     if (!control.value) return null;
     const selectedDate = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return selectedDate > today ? { futureDate: true } : null;
-  }
+  } */
 
   private loadNodeData(): void {
     const nodeId = this.selectedNode?.entry?.id || this.selectedNode?.id;
@@ -154,10 +154,16 @@ export class UpdateSad500TabComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const rawDate = this.form.value.dateSubmitted;
+    const normalizedDate = rawDate
+      ? new Date(Date.UTC(rawDate.getFullYear(), rawDate.getMonth(), rawDate.getDate()))
+      : null;
+
     const updatedProps = {
       'lracore:sad500Type': this.form.value.sad500Type || null,
-      'lracore:dateSubmitted': this.form.value.dateSubmitted?.toISOString() || null
+      'lracore:dateSubmitted': normalizedDate?.toISOString() || null
     };
+
 
     this.nodeApi.updateNode(nodeId, { properties: updatedProps }).subscribe({
       next: () => this.showSuccess('SAD500 updated successfully ✅'),
@@ -171,10 +177,6 @@ export class UpdateSad500TabComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) {
-      this.showError('Date submitted cannot be a future date. Please provide a valid date.');
-      return;
-    }
     this.updateMetadata();
   }
 

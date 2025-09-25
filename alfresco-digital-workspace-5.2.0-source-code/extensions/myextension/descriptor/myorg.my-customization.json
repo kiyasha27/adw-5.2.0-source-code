@@ -380,16 +380,6 @@
           "fields": [
             {
               "mincount": 1,
-              "field": "content.mimetype",
-              "label": "SEARCH.FACET_FIELDS.FILE_TYPE",
-              "settings": {
-                "allowUpdateOnChange": false,
-                "hideDefaultAction": true,
-                "facetOrder": 100
-              }
-            },
-            {
-              "mincount": 1,
               "field": "creator",
               "label": "SEARCH.FACET_FIELDS.CREATOR",
               "settings": {
@@ -441,35 +431,7 @@
           ]
         },
         "facetQueries": {
-          "label": "SEARCH.CATEGORIES.MODIFIED_DATE",
-          "expanded": true,
-          "queries": [
-            {
-              "label": "SEARCH.FACET_QUERIES.TODAY",
-              "query": "cm:modified:[TODAY to TODAY]"
-            },
-            {
-              "label": "SEARCH.FACET_QUERIES.THIS_WEEK",
-              "query": "cm:modified:[NOW/DAY-7DAYS TO NOW/DAY+1DAY]"
-            },
-            {
-              "label": "SEARCH.FACET_QUERIES.THIS_MONTH",
-              "query": "cm:modified:[NOW/DAY-1MONTH TO NOW/DAY+1DAY]"
-            },
-            {
-              "label": "SEARCH.FACET_QUERIES.LAST_6_MONTHS",
-              "query": "cm:modified:[NOW/DAY-6MONTHS TO NOW/DAY+1DAY]"
-            },
-            {
-              "label": "SEARCH.FACET_QUERIES.THIS_YEAR",
-              "query": "cm:modified:[NOW/DAY-1YEAR TO NOW/DAY+1DAY]"
-            }
-          ],
-          "settings": {
-            "allowUpdateOnChange": false,
-            "hideDefaultAction": true,
-            "facetOrder": 500
-          }
+
         },
         "categories": [
 
@@ -934,6 +896,8 @@
           "TAG",
           "lracore:taxpayerType",
           "lracore:taxNumber",
+        "lracore:etinNumber",
+        "lracore:TINNumber",
           "lracore:employeeReferenceNumber",
           "lracore:taxpayerName",
           "lracore:tradingName",
@@ -1068,6 +1032,7 @@
       }
     }
   },
+  
   {
     "id": "lracore:taxNumber",
     "name": "Tax Number",
@@ -1082,6 +1047,7 @@
       }
     }
   },
+
   {
     "id": "lracore:employeeReferenceNumber",
     "name": "Employee Reference Number",
@@ -1186,7 +1152,7 @@
     "enabled": true,
     "expanded": true,
     "component": {
-      "selector": "date-range",
+      "selector": "text",
       "settings": {
         "pattern": "lracore:financialPeriod:'(.*?)'",
         "field": "lracore:financialPeriod",
